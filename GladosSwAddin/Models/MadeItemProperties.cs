@@ -37,7 +37,7 @@ namespace GladosSwAddin.Models
         /// <summary>Resolved clear text for ArticleGroupIds, positionally aligned with it.
         /// Denormalized and therefore possibly stale: display fallback only — never compared
         /// against Glados and never used to match an item. See "Rules for derived properties"
-        /// in README.md.</summary>
+        /// in docs/DESIGN.md.</summary>
         public List<string> ArticleGroupNames { get; set; } = new List<string>();
 
         /// <summary>The file's link to a raw-material spec in the source-item catalogue, picked

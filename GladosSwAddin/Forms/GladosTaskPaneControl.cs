@@ -31,7 +31,7 @@ namespace GladosSwAddin
     /// FieldMappingService.IsDefaults — this machine's persisted "has connected before" signal)
     /// and Online (this session's PAT test succeeded, with a reason when it hasn't —
     /// OfflineReason). ApplyConnectionState is the only place either fact is turned into an
-    /// enabled/disabled control or a status icon/tooltip; see README's "Absence and
+    /// enabled/disabled control or a status icon/tooltip; see docs/DESIGN.md "Absence and
     /// unreachability are different" for the three resulting states.
     /// </summary>
     // SwAddin.CreateTaskpane instantiates this control across COM, by ProgId, via
@@ -159,7 +159,7 @@ namespace GladosSwAddin
         /// since a synced mapping only ever exists after a successful PAT test (FieldMappingService.
         /// IsDefaults already invalidates it back to false on a server-URL change, via the same
         /// normalisation it uses to compare URLs). This machine's persisted "has connected to
-        /// Glados before" signal — see ApplyConnectionState and README's "Absence and
+        /// Glados before" signal — see ApplyConnectionState and docs/DESIGN.md "Absence and
         /// unreachability are different".</summary>
         private static bool ServerKnown => !ApplicationServices.FieldMapping.IsDefaults;
 
@@ -859,7 +859,7 @@ namespace GladosSwAddin
         /// enable/disable state. Falls back to the offline lookup-list cache so the
         /// Manufacturer/Article Group pickers aren't just empty, and clears both tabs' Glados
         /// lookup/state/sync indicators so neither keeps showing a result computed while still
-        /// online — see README's "Absence and unreachability are different".</summary>
+        /// online — see docs/DESIGN.md "Absence and unreachability are different".</summary>
         private void SetOffline(OfflineReason reason, int statusCode = 0)
         {
             _online = false;
@@ -1396,7 +1396,7 @@ namespace GladosSwAddin
         /// <summary>Reads Glados.Kind and applies the Bought-vs-Made tab gate for it — see
         /// ApplyKindLock. A document that doesn't have Glados.Kind yet leaves the dropdown
         /// enabled with no selection (or whatever it already showed), exactly like a brand-new
-        /// document — see README's "Kind decides which catalogue". Blank/unrecognized values
+        /// document — see docs/DESIGN.md "Kind decides which catalogue". Blank/unrecognized values
         /// (Kind not set, or a stray value matching neither combo item) disable both tabs —
         /// see ApplySourceGateAsync.</summary>
         private async Task LoadKindForActiveModel(ModelDoc2 model)
@@ -1411,7 +1411,7 @@ namespace GladosSwAddin
         /// <summary>Reads Glados.Kind for the active configuration and, if it holds a valid
         /// value, forces the Source dropdown to match it and locks the dropdown against
         /// further edits — a document's kind, once stamped, never changes (see WriteKind and
-        /// README's "Kind decides which catalogue"). Unlocks the dropdown (as far as the rest of
+        /// docs/DESIGN.md "Kind decides which catalogue"). Unlocks the dropdown (as far as the rest of
         /// SourceDropdownAllowed permits — this only ever narrows, never widens, what that
         /// already allows) and clears the tooltip when Kind isn't set — callers that already
         /// have their own selection in mind (LoadKindForActiveModel, via ApplySourceGateAsync)
@@ -2505,7 +2505,7 @@ namespace GladosSwAddin
         /// <summary>Opens the Data Portal dialog on Order Code 1, with the background match's
         /// hits when there are any. What the engineer takes is shown as unsaved edits, the same
         /// as Load from Glados: nothing reaches the document before Save, and nothing reaches
-        /// Glados at all (README's "The invariant"). Not actually async, see
+        /// Glados at all (docs/DESIGN.md "The invariant"). Not actually async, see
         /// SelectSourceItemAsync.</summary>
         private Task OpenDataPortalAsync(IReadOnlyList<EdpSearchHitResponse> hits)
         {
@@ -3117,7 +3117,7 @@ namespace GladosSwAddin
         /// <summary>Repaints textBoxMadeItemSourceItem and the Clear button's enabled state from
         /// the current working selection (_madeItemSourceItemId/_madeItemSourceItemName) —
         /// never re-resolves against the lookup snapshot itself, so a spec that's since become
-        /// archived or unresolvable still shows its stored label rather than blanking (README's
+        /// archived or unresolvable still shows its stored label rather than blanking (docs/DESIGN.md
         /// derived-property rules). The Select button is left alone here: it stays enabled
         /// whenever the made tab itself is enabled — picking works from the offline snapshot,
         /// so it doesn't depend on _isConnected the way buttonMadeItemLoadFromGlados does.
@@ -3155,7 +3155,7 @@ namespace GladosSwAddin
 
         /// <summary>Opens SourceItemPickerForm modally (the "never writes to Glados" invariant's
         /// one documented exception lives inside the picker's own Create panel, not here — see
-        /// README's "The invariant"). Not actually async — ShowDialog blocks synchronously like
+        /// docs/DESIGN.md "The invariant"). Not actually async — ShowDialog blocks synchronously like
         /// every other modal in this add-in (OpenSettingsAsync) — kept as a Task-returning method
         /// only so buttonMadeItemSourceItemSelect_Click can route it through RunGuarded like every
         /// other click handler.</summary>
@@ -3309,7 +3309,7 @@ namespace GladosSwAddin
         /// Mass is parsed from free text via SwCustomPropertyService.ParseMassGrams (trimmed,
         /// comma or dot) — for both, SaveMadeItemPropertiesAsync's WriteMaterial/WriteMass calls
         /// compare the result against the value loaded from the document (baseline) to decide
-        /// whether the user overrode a template link (see docs/FIELD_OWNERSHIP.md / README
+        /// whether the user overrode a template link (see docs/FIELD_OWNERSHIP.md / docs/DESIGN.md
         /// "Write scopes and timing").
         /// </summary>
         private MadeItemProperties ReadMadeItemFromUi()
@@ -3530,7 +3530,7 @@ namespace GladosSwAddin
                 // override, detected against the values loaded from the document
                 // (_madeItemLocal) — never against the live resolved values, which a rebuild can
                 // change between load and Save. See WriteMass / WriteMaterial / WriteBaseSize and
-                // README's "Linked expressions on Save".
+                // docs/DESIGN.md "Linked expressions on Save".
                 var baseline = _madeItemLocal;
                 bool TextChanged(string current, string loaded) =>
                     !string.Equals(current ?? string.Empty, loaded ?? string.Empty, StringComparison.Ordinal);
@@ -3629,7 +3629,7 @@ namespace GladosSwAddin
             // file exactly as SolidWorks now holds it and the dirty markers reset against it.
             await ReloadAllForModel(model);
 
-            // Advisory-only, per README's "Validation before release" — runs after the save
+            // Advisory-only, per docs/DESIGN.md "Validation before release" — runs after the save
             // above has already fully committed, so a validation failure (unreachable server,
             // disabled integration, whatever) can never affect what Save just did.
             await ValidateMadeItemPdmAsync();
@@ -4281,7 +4281,7 @@ namespace GladosSwAddin
 
         /// <summary>The wire "kind" for the validate request: the Source dropdown's current
         /// selection, independent of which tab's Save/Validate triggered the check — see
-        /// README's "Kind decides which catalogue". Null mirrors an unset dropdown.</summary>
+        /// docs/DESIGN.md "Kind decides which catalogue". Null mirrors an unset dropdown.</summary>
         private ItemKind? GetSelectedSourceKind()
         {
             return ItemKindExtensions.TryParseWireValue(comboBoxSource.SelectedItem as string, out var kind)
@@ -4319,7 +4319,7 @@ namespace GladosSwAddin
         /// validation run — automatic after Save or from the button — can never interfere with
         /// Save itself or interrupt the user. The one local addition to the server's verdict is
         /// the Downloads reference check (TrySetPdmValidationDownloadsBlocked), which turns any
-        /// outcome into "not ready". See README's "Validation before release".
+        /// outcome into "not ready". See docs/DESIGN.md "Validation before release".
         /// </summary>
         private async Task RunPdmValidationAsync(
             ItemKind tabKind,
@@ -4642,7 +4642,7 @@ namespace GladosSwAddin
 
             // Nothing is written to the document here — picking a kind is only persisted
             // (as Glados.Kind, write-once) the next time the user actually saves item
-            // properties on the tab it switches to. See WriteKind and README's "Kind decides
+            // properties on the tab it switches to. See WriteKind and docs/DESIGN.md "Kind decides
             // which catalogue".
             _currentSource = newSource;
             await ApplySourceGateAsync();
@@ -4876,7 +4876,7 @@ namespace GladosSwAddin
                 // Preserves the template's linked SW-Mass expression: mass is authored by the
                 // add-in only on an explicit user override, detected against the value loaded
                 // from the document (_boughtItemLocal) — never against the live resolved value,
-                // which a rebuild can change between load and Save. See WriteMass and README's
+                // which a rebuild can change between load and Save. See WriteMass and docs/DESIGN.md
                 // "Linked expressions on Save".
                 if (!SwCustomPropertyService.WriteMass(
                         model, fieldMapping, ItemKind.Bought, edited.Mass,
@@ -4937,7 +4937,7 @@ namespace GladosSwAddin
             // and Reload From File's path brings the pane in line with it.
             await ReloadAllForModel(model);
 
-            // Advisory-only, per README's "Validation before release" — runs after the save
+            // Advisory-only, per docs/DESIGN.md "Validation before release" — runs after the save
             // above has already fully committed, so a validation failure (unreachable server,
             // disabled integration, whatever) can never affect what Save just did.
             await ValidateBoughtItemPdmAsync();

@@ -43,7 +43,7 @@ the add-in talks only to the backend's `api/v1/pat/*` and `api/v1/auth/*`
 surface, see `CLAUDE.md`). When a backend minor removes or changes something
 the add-in uses, a new add-in release goes out with it.
 
-At runtime the add-in compares the backend's `pat` contract (`GET api/v1/pat/version`) with `PatContract.Supported` in `GladosSwAddin/Api/PatContract.cs` after every connect and shows a non-blocking warning on a mismatch (see README "Backend contract check"). A release that moves to a new backend minor updates that constant together with the CHANGELOG statement.
+At runtime the add-in compares the backend's `pat` contract (`GET api/v1/pat/version`) with `PatContract.Supported` in `GladosSwAddin/Api/PatContract.cs` after every connect and shows a non-blocking warning on a mismatch (see docs/DESIGN.md "Backend contract check"). A release that moves to a new backend minor updates that constant together with the CHANGELOG statement.
 
 **Single version source:** `GladosSwAddin/Properties/AssemblyInfo.cs`,
 specifically `AssemblyVersion`, `AssemblyFileVersion` (both `X.Y.Z.0`) and
@@ -276,7 +276,7 @@ To package a DLL built somewhere else, override the source path:
 Uninstalling the MSI does **not** remove:
 
 - **`%LOCALAPPDATA%\GladosSwAddin\cache\`** - the per-server offline lookup
-  cache (`README.md` "Lookup cache"). Per-user, outside the MSI's install
+  cache (`docs/DESIGN.md` "Lookup cache"). Per-user, outside the MSI's install
   folder, harmless to leave and safe to delete by hand if ever needed.
 - **The PAT in Windows Credential Manager** - stored under the generic
   credential target `GladosSwAddin.Api` (`Services/CredentialService.cs`),

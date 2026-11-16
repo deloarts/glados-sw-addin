@@ -13,7 +13,7 @@ namespace GladosSwAddin.Services
     /// <summary>
     /// Read-only comparison of a local BoughtItemProperties against the Glados bought-item
     /// catalogue, matched by PDM.PartNumber. Creating and updating catalogue items is owned
-    /// by the PDM ingest path, outside this addin — see the sync strategy in README.md. This
+    /// by the PDM ingest path, outside this addin — see the sync strategy in docs/DESIGN.md. This
     /// addin only ever reads, to show the user whether their document is in sync and to flag
     /// likely-duplicate data entry.
     /// </summary>

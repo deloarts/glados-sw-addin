@@ -8,7 +8,7 @@ namespace GladosSwAddin.Api.Services
 {
     /// <summary>Wraps POST /api/v1/pat/pdm/validate — a read-only dry run that reports whether
     /// the active document's currently mapped custom-property values would be accepted by PDM
-    /// ingest, without touching PDM or the catalogue. See README.md's "Validation before
+    /// ingest, without touching PDM or the catalogue. See docs/DESIGN.md "Validation before
     /// release".</summary>
     public class PdmValidationApiService
     {

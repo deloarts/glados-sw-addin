@@ -22,7 +22,7 @@ namespace GladosSwAddin.Services
     /// ingest, and a configuration copy is a display convenience that can go stale. Writes go
     /// the other way: every property this addin authors is fanned out to document level *and*
     /// every configuration in the same Save (WriteText → WriteAllScopes), so a PDM data card
-    /// bound to a configuration tab shows it too — see README's "Write scopes and timing".
+    /// bound to a configuration tab shows it too — see docs/DESIGN.md "Write scopes and timing".
     /// Which property backs each field is resolved per call through the FieldMappingService
     /// passed in, not fixed constants — see docs/FIELD_OWNERSHIP.md section 2. The one field
     /// this addin authors end-to-end rather than syncing is a made item's routing
@@ -167,7 +167,7 @@ namespace GladosSwAddin.Services
         /// <summary>
         /// Writes fieldName into every scope a PDM data card might read from: document level
         /// and every configuration GetConfigurationNames() currently returns (WriteAllScopes)
-        /// — see README's "Write scopes and timing". Only ever call this (directly, or via one
+        /// — see docs/DESIGN.md "Write scopes and timing". Only ever call this (directly, or via one
         /// of the WriteXxx helpers below) for a property this addin itself authors: PDM.* is
         /// refused outright (GuardNotPdmOwned), and the backend's write-back variables
         /// (Glados.Ids, Glados.NewestRevisionSyncState, Glados.NewestRevisionSyncedAt) simply
@@ -225,7 +225,7 @@ namespace GladosSwAddin.Services
         /// <summary>Document level, then every configuration — the scope set a fan-out write
         /// hits. Configuration names are read fresh via GetConfigurationNames() on every call
         /// (never cached), so a configuration added since the document was loaded is picked up
-        /// by the next Save, exactly as README's "Write scopes and timing" describes.</summary>
+        /// by the next Save, exactly as docs/DESIGN.md "Write scopes and timing" describes.</summary>
         private static IEnumerable<KeyValuePair<ICustomPropertyManager, string>> EnumerateScopes(
             ModelDoc2 model)
         {
@@ -258,7 +258,7 @@ namespace GladosSwAddin.Services
         /// WriteText fans every add-in-written property out to document level *and* every
         /// configuration (WriteAllScopes), a label and its key always land in the same scopes
         /// by construction, so this is a thin alias — kept so call sites keep documenting which
-        /// key a label belongs to (README rule 4: "a label is written to the same scope as its
+        /// key a label belongs to (docs/DESIGN.md rule 4: "a label is written to the same scope as its
         /// key") rather than losing that pairing to a bare WriteText call.
         /// <paramref name="anchorProperty"/> is unused; the fan-out no longer needs it.
         /// </summary>
@@ -580,7 +580,7 @@ namespace GladosSwAddin.Services
         /// Save-time write for Glados.Mass (or whatever the current mapping resolves
         /// ItemField.Mass to, for <paramref name="kind"/>): preserves the template's linked
         /// expression instead of clobbering it with a resolved number — see
-        /// WriteLinkedNumericField and README's "Linked expressions on Save".
+        /// WriteLinkedNumericField and docs/DESIGN.md "Linked expressions on Save".
         /// <paramref name="massGrams"/> is whatever the task pane currently shows and is written
         /// only when <paramref name="userChanged"/> says the user edited it since the document
         /// was loaded. The made-item tab has an edit control for mass and detects that against
@@ -725,7 +725,7 @@ namespace GladosSwAddin.Services
         /// Otherwise document level is left untouched and whatever it holds is propagated to the
         /// configurations (MirrorDocumentValueToConfigurations): a linked expression (per the
         /// isLinked flag TryGetRaw reads off Get6) rewritten per configuration, a plain value
-        /// copied as is. A property missing at document level is not invented. See README's
+        /// copied as is. A property missing at document level is not invented. See docs/DESIGN.md
         /// "Linked expressions on Save".
         /// </summary>
         private static bool WriteLinkedTextField(
@@ -828,7 +828,7 @@ namespace GladosSwAddin.Services
         /// configuration copy alone — for every other expression: a bounding-box or dimension
         /// formula, several links concatenated, arithmetic around a link. Those belong to the
         /// template author, and a blind rewrite corrupts them (the first '@' of
-        /// `"D1@Sketch1@file"` is not where a configuration goes). See README's "Linked
+        /// `"D1@Sketch1@file"` is not where a configuration goes). See docs/DESIGN.md "Linked
         /// expressions on Save". The return value doubles as the shape check for a value already
         /// known to be linked (MirrorDocumentValueToConfigurations only calls this once
         /// TryGetRaw's isLinked flag is true) — pure string matching against
@@ -1075,7 +1075,7 @@ namespace GladosSwAddin.Services
         /// value: PDM writes its own variables (PDM.PartNumber, PDM.Revision) into the
         /// configurations when the variable's Configurations mapping is blank, and a document
         /// template or an earlier "@" mapping can leave an empty document-level property next
-        /// to them. See README's "Write scopes and timing".
+        /// to them. See docs/DESIGN.md "Write scopes and timing".
         /// </summary>
         private static ICustomPropertyManager ResolveScope(
             ModelDoc2 model,
@@ -1316,7 +1316,7 @@ namespace GladosSwAddin.Services
         /// in grams — formatted by the local SolidWorks in the running locale, hence "1234,56" on
         /// a de-AT machine. Anything non-numeric returns null rather than being coerced: a unit
         /// showing up there would mean the document units changed, which is worth surfacing.
-        /// Public because the made-item task pane's Mass text box (free text, per README's
+        /// Public because the made-item task pane's Mass text box (free text, per docs/DESIGN.md
         /// custom property convention) reuses this same tolerant parsing for whatever the user
         /// types, rather than restricting the control to a stricter numeric format.</summary>
         public static int? ParseMassGrams(string value)

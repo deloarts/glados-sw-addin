@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="CLAUDE.md" />
+    <File Path="docs/FIELD_OWNERSHIP.md" />
+    <File Path="docs/RELEASE.md" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="GladosSwAddin\GladosSwAddin.csproj" Id="7c74e4fe-ae73-48be-ac51-1efab4b5f523" />
+  <Project Path="GladosSwAddin.Tests\GladosSwAddin.Tests.csproj" Id="22a49471-4852-493d-9e99-1241ae8ff48d" />
+</Solution>

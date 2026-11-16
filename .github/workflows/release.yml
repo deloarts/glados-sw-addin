@@ -1,0 +1,238 @@
+# Release: tag and publish a version of glados-sw-addin when its release PR is merged.
+#
+# Merging a pull request from `release/X.Y.Z` into main is the release action. This workflow
+# then verifies the merge, tags the squash commit vX.Y.Z, builds the add-in and the MSI from that
+# tag, and publishes the GitHub Release. Tagging and building happen in one run on purpose: a
+# tag pushed with GITHUB_TOKEN does not trigger other workflows, and a tag pushed by hand
+# publishes nothing.
+#
+# workflow_dispatch (on main only) is the recovery path when the automatic run failed after the
+# merge: it tags the current main head if AssemblyInfo.cs carries the given version and the tag
+# is still free. See docs/RELEASE.md for the full release flow.
+#
+# Assets published on the GitHub Release:
+#   - GladosSwAddin-X.Y.Z.msi (the installer)
+#   - GladosSwAddin.dll (the same merged assembly, unpacked)
+#   - SHA256SUMS.txt (checksums for both)
+name: Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to tag on the current main head (X.Y.Z), only to recover a failed release run"
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  guard:
+    # Only merged PRs from a release branch of this repository, never from a fork, and never a
+    # PR that was closed without merging.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.merged == true &&
+       github.event.pull_request.head.repo.full_name == github.repository &&
+       startsWith(github.event.pull_request.head.ref, 'release/'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      version: ${{ steps.info.outputs.version }}
+      sha: ${{ steps.info.outputs.sha }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Derive version
+        id: info
+        env:
+          EVENT: ${{ github.event_name }}
+          REF: ${{ github.ref }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          if [[ "$EVENT" == "workflow_dispatch" ]]; then
+            if [[ "$REF" != "refs/heads/main" ]]; then
+              echo "::error::Run the recovery dispatch on main, not $REF" >&2
+              exit 1
+            fi
+            version="$INPUT_VERSION"
+          else
+            version="${HEAD_REF#release/}"
+          fi
+
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::'$version' is not an X.Y.Z version" >&2
+            exit 1
+          fi
+
+          {
+            echo "version=$version"
+            echo "sha=$(git rev-parse HEAD)"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Check AssemblyInfo, CHANGELOG and tag
+        shell: pwsh
+        run: scripts/Test-ReleaseVersion.ps1 -Version "${{ steps.info.outputs.version }}"
+
+      # A squash commit's only parent is main as it was right before the merge. If the release
+      # branch did not contain it, main had moved on and the merge would tag code the candidate
+      # MSI never contained.
+      - name: Check the release branch contained main
+        if: github.event_name == 'pull_request'
+        env:
+          MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if ! git merge-base --is-ancestor "${MERGE_SHA}^" "$HEAD_SHA"; then
+            echo "::error::The release branch was behind main when it was merged. Nothing was tagged. Validate main and use the workflow_dispatch recovery, or cut the next patch." >&2
+            exit 1
+          fi
+
+  tag:
+    needs: guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ needs.guard.outputs.sha }}
+
+      - name: Create and push tag
+        env:
+          VERSION: ${{ needs.guard.outputs.version }}
+          SHA: ${{ needs.guard.outputs.sha }}
+        run: |
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              tag -a "v$VERSION" -m "Release v$VERSION" "$SHA"
+          git push origin "v$VERSION"
+
+  build:
+    needs: [guard, tag]
+    runs-on: windows-2025-vs2026
+    timeout-minutes: 30
+    # Creates the GitHub Release and uploads its assets - needs write access. id-token and
+    # attestations are for the build-provenance step (public repository only, see below).
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: v${{ needs.guard.outputs.version }}
+
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce # v2.0.0
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4.3.1
+        with:
+          global-json-file: global.json
+
+      - name: Cache NuGet packages
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: ~/.nuget/packages
+          key: nuget-packages-${{ runner.os }}-${{ hashFiles('GladosSwAddin/GladosSwAddin.csproj', 'GladosSwAddin.Tests/GladosSwAddin.Tests.csproj', 'GladosSwAddin.Installer/GladosSwAddin.Installer.wixproj') }}
+          restore-keys: |
+            nuget-packages-${{ runner.os }}-
+
+      - name: Restore NuGet packages
+        shell: pwsh
+        run: msbuild GladosSwAddin\GladosSwAddin.csproj -t:Restore
+
+      - name: Build add-in (Release)
+        shell: pwsh
+        run: msbuild GladosSwAddin\GladosSwAddin.csproj /t:Build /p:Configuration=Release /p:RegisterForComInterop=false /nologo /v:m
+
+      - name: Build unit tests
+        shell: pwsh
+        run: msbuild GladosSwAddin.Tests\GladosSwAddin.Tests.csproj -restore /p:Configuration=Release /nologo /v:m
+
+      - name: Run unit tests
+        shell: pwsh
+        # The release rebuilds from the tag rather than reusing CI's artifacts, so it repeats
+        # CI's gates on exactly the binaries it is about to publish.
+        run: dotnet test GladosSwAddin.Tests\bin\Release\net48\GladosSwAddin.Tests.dll
+
+      - name: Verify installer COM registration matches the assembly
+        shell: pwsh
+        # Same gate as ci.yml - never publish an MSI whose registry rows miss the assembly.
+        run: .github\scripts\Test-ComRegistration.ps1 -DllPath GladosSwAddin\bin\Release\GladosSwAddin.dll -WxsPath GladosSwAddin.Installer\Package.wxs
+
+      - name: Build installer MSI
+        shell: pwsh
+        # Full MSBuild, not `dotnet build`: the wixproj's ProjectReference pulls in the classic
+        # .NET Framework add-in project, which only the Visual Studio MSBuild can compile.
+        run: msbuild GladosSwAddin.Installer\GladosSwAddin.Installer.wixproj -restore -p:Configuration=Release -nologo -v:m
+
+      - name: Stage release assets and checksums
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path dist | Out-Null
+          Copy-Item GladosSwAddin\bin\Release\GladosSwAddin.dll dist\GladosSwAddin.dll
+          $msi = Get-ChildItem GladosSwAddin.Installer\bin\x64\Release\GladosSwAddin-*.msi | Select-Object -First 1
+          Copy-Item $msi.FullName (Join-Path dist $msi.Name)
+
+          Push-Location dist
+          $files = @("GladosSwAddin.dll", $msi.Name)
+          Get-FileHash -Algorithm SHA256 -Path $files |
+            ForEach-Object { "$($_.Hash.ToLower())  $(Split-Path -Leaf $_.Path)" } |
+            Set-Content -Encoding ascii SHA256SUMS.txt
+          Pop-Location
+
+      - name: Attest build provenance
+        # Signed SLSA provenance linking each published file to this workflow run and commit
+        # (verify with `gh attestation verify <file> --repo <owner>/<repo>`). GitHub offers
+        # artifact attestations for private repositories only on Enterprise Cloud, so this
+        # switches itself on once the repository is public.
+        if: ${{ !github.event.repository.private }}
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: |
+            dist/GladosSwAddin.dll
+            dist/GladosSwAddin-*.msi
+
+      - name: Extract changelog section for this version
+        shell: bash
+        env:
+          VERSION: ${{ needs.guard.outputs.version }}
+        run: |
+          awk -v ver="$VERSION" '
+            /^## \[/ {
+              if (found) exit
+              if (index($0, "[" ver "]") > 0) { found=1 }
+              next
+            }
+            found { print }
+          ' CHANGELOG.md > release_notes.md
+          if [ ! -s release_notes.md ]; then
+            echo "(No CHANGELOG.md section found for $VERSION.)" > release_notes.md
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
+        with:
+          tag_name: v${{ needs.guard.outputs.version }}
+          name: v${{ needs.guard.outputs.version }}
+          files: |
+            dist/GladosSwAddin.dll
+            dist/GladosSwAddin-*.msi
+            dist/SHA256SUMS.txt
+          body_path: release_notes.md

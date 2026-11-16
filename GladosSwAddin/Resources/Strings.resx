@@ -1,0 +1,780 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="SettingsLinkText" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="LinkReloadText" xml:space="preserve">
+    <value>Reload</value>
+  </data>
+  <data name="TooltipReloadFormat" xml:space="preserve">
+    <value>Fetches the latest manufacturers, article groups and methods from GLADOS. Last synced: {0}.</value>
+  </data>
+  <data name="TooltipReloadNeverSynced" xml:space="preserve">
+    <value>Fetches the latest manufacturers, article groups and methods from GLADOS. Not yet synced from this server.</value>
+  </data>
+  <data name="TabBoughtItemText" xml:space="preserve">
+    <value>Bought Item</value>
+  </data>
+  <data name="TabMadeItemText" xml:space="preserve">
+    <value>Made Item</value>
+  </data>
+  <data name="TabAssemblyText" xml:space="preserve">
+    <value>Assembly</value>
+  </data>
+  <data name="TabDrawingText" xml:space="preserve">
+    <value>Drawing</value>
+  </data>
+  <data name="LabelDocumentNotSavedText" xml:space="preserve">
+    <value>This document hasn't been saved yet. Save it once to start editing its GLADOS properties.</value>
+  </data>
+  <data name="ButtonInitMadeText" xml:space="preserve">
+    <value>Create MADE item</value>
+  </data>
+  <data name="ButtonInitBoughtText" xml:space="preserve">
+    <value>Create BOUGHT item</value>
+  </data>
+  <data name="ButtonInitCustomerText" xml:space="preserve">
+    <value>Create CUSTOMER item</value>
+  </data>
+  <data name="LabelCustomerText" xml:space="preserve">
+    <value>Customer</value>
+  </data>
+  <data name="LabelCustomerPartNumberText" xml:space="preserve">
+    <value>Customer Part Number</value>
+  </data>
+  <data name="LabelCustomerRevisionText" xml:space="preserve">
+    <value>Customer Revision</value>
+  </data>
+  <data name="ButtonCustomerClearText" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="TooltipCustomerPartNumberRequired" xml:space="preserve">
+    <value>A customer item needs the customer's part number.</value>
+  </data>
+  <data name="TooltipCustomerRequired" xml:space="preserve">
+    <value>Customer part number and revision need a customer.</value>
+  </data>
+  <data name="LabelSyncText" xml:space="preserve">
+    <value>Sync</value>
+  </data>
+  <data name="LabelStateText" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="ButtonLoadFromGladosText" xml:space="preserve">
+    <value>Load from GLADOS</value>
+  </data>
+  <data name="ButtonSaveToFileText" xml:space="preserve">
+    <value>Save To File</value>
+  </data>
+  <data name="ButtonReloadFromFileText" xml:space="preserve">
+    <value>Reload From File</value>
+  </data>
+  <data name="LabelArticleNameText" xml:space="preserve">
+    <value>Article Name</value>
+  </data>
+  <data name="LabelOrderCode1Text" xml:space="preserve">
+    <value>Order Code 1</value>
+  </data>
+  <data name="LabelOrderCode2Text" xml:space="preserve">
+    <value>Order Code 2</value>
+  </data>
+  <data name="LabelGtinText" xml:space="preserve">
+    <value>GTIN</value>
+  </data>
+  <data name="LabelEanText" xml:space="preserve">
+    <value>EAN</value>
+  </data>
+  <data name="LabelTariffNumberText" xml:space="preserve">
+    <value>Tariff Number</value>
+  </data>
+  <data name="LabelNoteText" xml:space="preserve">
+    <value>General Note</value>
+  </data>
+  <data name="LabelAssemblyNameText" xml:space="preserve">
+    <value>Assembly Name</value>
+  </data>
+  <data name="LabelWeblinkText" xml:space="preserve">
+    <value>Weblink</value>
+  </data>
+  <data name="ButtonVisitWeblinkText" xml:space="preserve">
+    <value>Visit</value>
+  </data>
+  <data name="LabelManufacturerText" xml:space="preserve">
+    <value>Manufacturer</value>
+  </data>
+  <data name="LabelArticleGroupsText" xml:space="preserve">
+    <value>Article Groups</value>
+  </data>
+  <data name="LabelMaterialText" xml:space="preserve">
+    <value>Material</value>
+  </data>
+  <data name="LabelMassText" xml:space="preserve">
+    <value>Mass [g]</value>
+  </data>
+  <data name="LabelPartNumberText" xml:space="preserve">
+    <value>Part Number</value>
+  </data>
+  <data name="LabelRevisionText" xml:space="preserve">
+    <value>Revision</value>
+  </data>
+  <data name="LabelConfigurationText" xml:space="preserve">
+    <value>Configuration</value>
+  </data>
+  <data name="LabelSourceText" xml:space="preserve">
+    <value>Kind</value>
+  </data>
+  <data name="TooltipLoadFromGlados" xml:space="preserve">
+    <value>Shows what GLADOS currently has for this part in the fields below, so you can see it. This is just a preview — nothing is saved to the file yet.</value>
+  </data>
+  <data name="TooltipSaveToFile" xml:space="preserve">
+    <value>Writes whatever is currently in the fields below into the SolidWorks file, then re-reads the file so calculated values (mass, material, base size) show their fresh results. Your edits aren't part of the file until you click this.</value>
+  </data>
+  <data name="TooltipReloadFromFile" xml:space="preserve">
+    <value>Re-reads everything fresh from the SolidWorks file — useful if the properties were changed some other way and the fields need to catch up.</value>
+  </data>
+  <data name="TooltipVisitWeblink" xml:space="preserve">
+    <value>Opens the web link in your browser.</value>
+  </data>
+  <data name="TooltipKindLocked" xml:space="preserve">
+    <value>Kind is fixed in the document.</value>
+  </data>
+  <data name="TooltipNotConnectedYet" xml:space="preserve">
+    <value>Not connected to GLADOS yet — connect once (Settings) to enable editing.</value>
+  </data>
+  <data name="TooltipConnectedFormat" xml:space="preserve">
+    <value>Connected to {0}.</value>
+  </data>
+  <data name="TooltipOfflineUnreachableFormat" xml:space="preserve">
+    <value>GLADOS not reachable — editing with data cached {0} (Reload retries).</value>
+  </data>
+  <data name="TooltipOfflineNoCredentials" xml:space="preserve">
+    <value>No access token set — editing with cached data; set it in Settings.</value>
+  </data>
+  <data name="TooltipOfflineTokenRejected" xml:space="preserve">
+    <value>Access token rejected — editing with cached data; fix it in Settings.</value>
+  </data>
+  <data name="TooltipOfflineServerErrorFormat" xml:space="preserve">
+    <value>GLADOS answered with error {0} — editing with cached data (Reload retries).</value>
+  </data>
+  <data name="StateActive" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="StateInactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="StateReplaced" xml:space="preserve">
+    <value>Replaced</value>
+  </data>
+  <data name="StateNoCatalogueItem" xml:space="preserve">
+    <value>No catalogue item</value>
+  </data>
+  <data name="SyncInSync" xml:space="preserve">
+    <value>In sync</value>
+  </data>
+  <data name="SyncNotCheckedIn" xml:space="preserve">
+    <value>Not checked in yet</value>
+  </data>
+  <data name="SyncNotInGlados" xml:space="preserve">
+    <value>Not in GLADOS</value>
+  </data>
+  <data name="SyncPossibleDuplicate" xml:space="preserve">
+    <value>Possible duplicate</value>
+  </data>
+  <data name="SyncLookupFailed" xml:space="preserve">
+    <value>Lookup failed</value>
+  </data>
+  <data name="SyncNoPartNumber" xml:space="preserve">
+    <value>No part number yet</value>
+  </data>
+  <data name="AssemblyNotTrackedText" xml:space="preserve">
+    <value>Not tracked in GLADOS</value>
+  </data>
+  <data name="PossibleDuplicateDetailFormat" xml:space="preserve">
+    <value>Manufacturer "{0}", order code "{1}" ("{2}") already exists in GLADOS with no part number assigned yet — you may be duplicating data entry.</value>
+  </data>
+  <data name="MessageBoxTitleGlados" xml:space="preserve">
+    <value>GLADOS</value>
+  </data>
+  <data name="ErrorGladosLookupFailedFormat" xml:space="preserve">
+    <value>GLADOS lookup failed: {0}</value>
+  </data>
+  <data name="ErrorGladosLookupFailedNoConnection" xml:space="preserve">
+    <value>GLADOS lookup failed: no connection to server.</value>
+  </data>
+  <data name="ErrorServerAnsweredFormat" xml:space="preserve">
+    <value>GLADOS answered with error {0}: {1}
+
+Your Personal Access Token is fine; this is usually temporary, for example during maintenance. Reload retries.</value>
+  </data>
+  <data name="ErrorSignInFailedFormat" xml:space="preserve">
+    <value>GLADOS sign-in failed: {0}
+
+Your Personal Access Token appears to be invalid or has been revoked. Update it in Settings.</value>
+  </data>
+  <data name="ErrorCouldNotReachServerFormat" xml:space="preserve">
+    <value>Could not reach the GLADOS server: {0}</value>
+  </data>
+  <data name="ErrorServerUrlInvalidFormat" xml:space="preserve">
+    <value>GLADOS server URL is invalid: {0}</value>
+  </data>
+  <data name="ErrorLoadFailedFormat" xml:space="preserve">
+    <value>Load failed: {0}</value>
+  </data>
+  <data name="ErrorLoadFailedNoConnection" xml:space="preserve">
+    <value>Load failed: no connection to server.</value>
+  </data>
+  <data name="ErrorWeblinkInvalidFormat" xml:space="preserve">
+    <value>"{0}" isn't a valid web address.</value>
+  </data>
+  <data name="ErrorWeblinkOpenFailedFormat" xml:space="preserve">
+    <value>Couldn't open the web link: {0}</value>
+  </data>
+  <data name="ErrorFailedToSaveDocumentFormat" xml:space="preserve">
+    <value>Failed to save to the document: {0}</value>
+  </data>
+  <data name="ErrorSavedButFailedFormat" xml:space="preserve">
+    <value>Saved, but failed to save: {0}.</value>
+  </data>
+  <data name="ChangeSourceWarningTitle" xml:space="preserve">
+    <value>Change Kind</value>
+  </data>
+  <data name="ChangeSourceWarningMessage" xml:space="preserve">
+    <value>Changing the Kind determines whether this part uploads to GLADOS as a Bought Item or a Made Item catalogue entry.
+
+If this switches between Bought and Made, the tab you're leaving will be disabled and its unsaved fields cleared.
+
+Continue?</value>
+  </data>
+  <data name="ErrorUnexpectedFormat" xml:space="preserve">
+    <value>An unexpected error occurred: {0}</value>
+  </data>
+  <data name="SettingsEnterServerAndPatWarning" xml:space="preserve">
+    <value>Enter a server URL and a personal access token first.</value>
+  </data>
+  <data name="SettingsPatValidFormat" xml:space="preserve">
+    <value>PAT is valid for {0} ({1}).</value>
+  </data>
+  <data name="SettingsPatTestFailedFormat" xml:space="preserve">
+    <value>PAT test failed: {0}</value>
+  </data>
+  <data name="MadeItemInspectionStandaloneTooltip" xml:space="preserve">
+    <value>A QA inspection always stands alone and is never grouped.</value>
+  </data>
+  <data name="MadeItemProcessesUnreadableHint" xml:space="preserve">
+    <value>The stored routing (Glados.Processes) could not be read. It will not be overwritten until you save.</value>
+  </data>
+  <data name="MadeItemStepsTitleText" xml:space="preserve">
+    <value>Process Routing</value>
+  </data>
+  <data name="LabelMadeItemStepNoteText" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="MadeItemStepRoleInspectionText" xml:space="preserve">
+    <value>Inspection</value>
+  </data>
+  <data name="ProcessRoutingRowTitleFormat" xml:space="preserve">
+    <value>Process {0}</value>
+  </data>
+  <data name="ProcessRoutingInspectionChoiceFormat" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="TooltipProcessRoutingLink" xml:space="preserve">
+    <value>Link with previous step</value>
+  </data>
+  <data name="TooltipProcessRoutingSplit" xml:space="preserve">
+    <value>Split from previous step</value>
+  </data>
+  <data name="TooltipProcessRoutingMoveUp" xml:space="preserve">
+    <value>Move step up</value>
+  </data>
+  <data name="TooltipProcessRoutingMoveDown" xml:space="preserve">
+    <value>Move step down</value>
+  </data>
+  <data name="ButtonPdmValidateText" xml:space="preserve">
+    <value>Validate</value>
+  </data>
+  <data name="TooltipPdmValidate" xml:space="preserve">
+    <value>Checks with GLADOS whether this document's current properties are ready to be released to PDM. Advisory only — nothing is written or sent anywhere.</value>
+  </data>
+  <data name="PdmValidationNotChecked" xml:space="preserve">
+    <value>Not checked</value>
+  </data>
+  <data name="PdmValidationChecking" xml:space="preserve">
+    <value>Checking…</value>
+  </data>
+  <data name="PdmValidationReady" xml:space="preserve">
+    <value>Ready for PDM</value>
+  </data>
+  <data name="PdmValidationReadyFormat" xml:space="preserve">
+    <value>Ready for PDM ({0})</value>
+  </data>
+  <data name="PdmValidationOutcomeCreated" xml:space="preserve">
+    <value>create</value>
+  </data>
+  <data name="PdmValidationOutcomeRevised" xml:space="preserve">
+    <value>new revision</value>
+  </data>
+  <data name="PdmValidationOutcomeUpdated" xml:space="preserve">
+    <value>update</value>
+  </data>
+  <data name="PdmValidationOutcomeClaimed" xml:space="preserve">
+    <value>link</value>
+  </data>
+  <data name="PdmValidationOutcomeStatus" xml:space="preserve">
+    <value>status change</value>
+  </data>
+  <data name="PdmValidationOutcomeUnknown" xml:space="preserve">
+    <value>unknown</value>
+  </data>
+  <data name="PdmValidationBlocked" xml:space="preserve">
+    <value>Not ready for PDM</value>
+  </data>
+  <data name="PdmValidationUnreachable" xml:space="preserve">
+    <value>Check not possible</value>
+  </data>
+  <data name="PdmValidationIntegrationDisabled" xml:space="preserve">
+    <value>PDM integration disabled</value>
+  </data>
+  <data name="PdmValidationFileIdentityUnresolved" xml:space="preserve">
+    <value>File not linked in PDM, checked without a file reference</value>
+  </data>
+  <data name="PdmValidationPendingTooltipFormat" xml:space="preserve">
+    <value>Assigned by PDM at release: {0}</value>
+  </data>
+  <data name="DownloadsReferenceWarning" xml:space="preserve">
+    <value>References files in Downloads</value>
+  </data>
+  <data name="DownloadsReferenceHeader" xml:space="preserve">
+    <value>This document references files in a Downloads folder, which no one else will have once it is released to PDM:</value>
+  </data>
+  <data name="DownloadsReferenceAdvice" xml:space="preserve">
+    <value>Break the link (Break Link on a 3D Interconnect feature), or move the file to a permanent location and update the reference.</value>
+  </data>
+  <data name="TooltipRequiredField" xml:space="preserve">
+    <value>Required field for GLADOS</value>
+  </data>
+  <data name="TooltipAssemblyNotTracked" xml:space="preserve">
+    <value>A made assembly is not a catalogue item in GLADOS. This tab only stores metadata on the file, so there is nothing to look up or validate.</value>
+  </data>
+  <data name="PlaceholderPartNumberAssignedByPdm" xml:space="preserve">
+    <value>assigned by PDM at check-in</value>
+  </data>
+  <data name="PlaceholderRevisionAssignedByPdm" xml:space="preserve">
+    <value>assigned by PDM at release</value>
+  </data>
+  <data name="TooltipRequiredFabricationStep" xml:space="preserve">
+    <value>At least one fabrication step with a fabrication method</value>
+  </data>
+  <data name="LabelSourceItemText" xml:space="preserve">
+    <value>Source Item</value>
+  </data>
+  <data name="ButtonSourceItemSelectText" xml:space="preserve">
+    <value>Select...</value>
+  </data>
+  <data name="ButtonSourceItemClearText" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="SourceItemPickerTitleText" xml:space="preserve">
+    <value>GLADOS SOLIDWORKS Add-in | Select Source Item</value>
+  </data>
+  <data name="LabelSourceItemSearchText" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="LabelSourceItemTypeText" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="LabelSourceItemDimensionText" xml:space="preserve">
+    <value>Dimension</value>
+  </data>
+  <data name="LabelSourceItemStatusText" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="LabelSourceItemNoteText" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="CheckBoxSourceItemShowArchivedText" xml:space="preserve">
+    <value>Show archived</value>
+  </data>
+  <data name="ButtonSourceItemRefreshText" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="ButtonSourceItemUseText" xml:space="preserve">
+    <value>Use</value>
+  </data>
+  <data name="ButtonSourceItemCancelText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ButtonSourceItemCreateText" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="TooltipSourceItemCreateDisconnected" xml:space="preserve">
+    <value>Connect to GLADOS to create a source item.</value>
+  </data>
+  <data name="TooltipSourceItemCreateNoPermission" xml:space="preserve">
+    <value>Your GLADOS account can't create source items.</value>
+  </data>
+  <data name="ErrorSourceItemCreateRequiredFields" xml:space="preserve">
+    <value>Type, dimension and material are required.</value>
+  </data>
+  <data name="ErrorSourceItemCreateInvalidMass" xml:space="preserve">
+    <value>Mass must be a whole number of grams.</value>
+  </data>
+  <data name="ErrorSourceItemCreateForbidden" xml:space="preserve">
+    <value>You don't have permission to create source items.</value>
+  </data>
+  <data name="ErrorSourceItemCreateNoConnection" xml:space="preserve">
+    <value>Create failed: no connection to server.</value>
+  </data>
+  <data name="ErrorSourceItemCreateDimensionInvalid" xml:space="preserve">
+    <value>Enter a positive number for every dimension field.</value>
+  </data>
+  <data name="GroupBoxSourceItemCreateText" xml:space="preserve">
+    <value>Create Source Item</value>
+  </data>
+  <data name="DimensionShapeBlockText" xml:space="preserve">
+    <value>Block</value>
+  </data>
+  <data name="DimensionShapeProfileText" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="DimensionShapeTurnedPartText" xml:space="preserve">
+    <value>Turned Part</value>
+  </data>
+  <data name="DimensionShapeTubeText" xml:space="preserve">
+    <value>Tube</value>
+  </data>
+  <data name="DimensionShapeCustomText" xml:space="preserve">
+    <value>Custom</value>
+  </data>
+  <data name="LabelDimensionWidthText" xml:space="preserve">
+    <value>Width</value>
+  </data>
+  <data name="LabelDimensionHeightText" xml:space="preserve">
+    <value>Height</value>
+  </data>
+  <data name="LabelDimensionThicknessText" xml:space="preserve">
+    <value>Thickness</value>
+  </data>
+  <data name="LabelDimensionLengthText" xml:space="preserve">
+    <value>Length</value>
+  </data>
+  <data name="LabelDimensionDiameterText" xml:space="preserve">
+    <value>Diameter</value>
+  </data>
+  <data name="LabelDimensionWallThicknessText" xml:space="preserve">
+    <value>Wall Thickness</value>
+  </data>
+  <data name="LabelDimensionUnitFormat" xml:space="preserve">
+    <value>{0} [mm]</value>
+  </data>
+  <data name="LabelSourceItemBaseSizeFormat" xml:space="preserve">
+    <value>Base Size: {0}</value>
+  </data>
+  <data name="InfoSourceItemDuplicateText" xml:space="preserve">
+    <value>An identical source item exists, it is selected above.</value>
+  </data>
+  <data name="ButtonCalcText" xml:space="preserve">
+    <value>Calc.</value>
+  </data>
+  <data name="TooltipCalcRestoreMass" xml:space="preserve">
+    <value>Discards the entered value and restores the SolidWorks-calculated mass (re-links the property in every configuration).</value>
+  </data>
+  <data name="TooltipCalcRestoreMaterial" xml:space="preserve">
+    <value>Discards the entered value and restores the SolidWorks-calculated material (re-links the property in every configuration).</value>
+  </data>
+  <data name="TooltipCalcAlreadyCalculated" xml:space="preserve">
+    <value>Already calculated by SolidWorks.</value>
+  </data>
+  <data name="ErrorRestoreFailedFormat" xml:space="preserve">
+    <value>Restore failed: {0}</value>
+  </data>
+  <data name="SettingsFormTitleText" xml:space="preserve">
+    <value>GLADOS SOLIDWORKS Add-in | Settings</value>
+  </data>
+  <data name="SettingsTabAuthText" xml:space="preserve">
+    <value>Authentication</value>
+  </data>
+  <data name="SettingsLabelServerUrlText" xml:space="preserve">
+    <value>Server URL</value>
+  </data>
+  <data name="SettingsLabelPatText" xml:space="preserve">
+    <value>Personal Access Token</value>
+  </data>
+  <data name="SettingsButtonTestPatText" xml:space="preserve">
+    <value>Test Credentials</value>
+  </data>
+  <data name="SettingsTabFieldMappingText" xml:space="preserve">
+    <value>Field Mapping</value>
+  </data>
+  <data name="SettingsColumnKindText" xml:space="preserve">
+    <value>Kind</value>
+  </data>
+  <data name="SettingsColumnFieldText" xml:space="preserve">
+    <value>Field</value>
+  </data>
+  <data name="SettingsColumnOwnerText" xml:space="preserve">
+    <value>Owner</value>
+  </data>
+  <data name="SettingsColumnPropertyText" xml:space="preserve">
+    <value>Custom Property</value>
+  </data>
+  <data name="SettingsColumnUpdateInPlaceText" xml:space="preserve">
+    <value>Update in Place</value>
+  </data>
+  <data name="SettingsButtonSaveText" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="SettingsButtonCancelText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="SettingsKindMadeText" xml:space="preserve">
+    <value>Made</value>
+  </data>
+  <data name="SettingsKindBoughtText" xml:space="preserve">
+    <value>Bought</value>
+  </data>
+  <data name="SettingsYesText" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="SettingsNoText" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="SettingsFieldMappingDefaultsText" xml:space="preserve">
+    <value>Defaults — not yet synced</value>
+  </data>
+  <data name="SettingsFieldMappingSyncedFormat" xml:space="preserve">
+    <value>Synced from {0} at {1}</value>
+  </data>
+  <data name="SettingsFeatureTreeTemplatesFormat" xml:space="preserve">
+    <value>Feature tree, made: {0}
+Feature tree, bought: {1}</value>
+  </data>
+  <data name="SettingsInsecureServerUrlWarningFormat" xml:space="preserve">
+    <value>The server URL {0} uses unencrypted HTTP. Your personal access token would be sent in plain text and could be read by anyone on the network.
+
+Continue anyway?</value>
+  </data>
+  <data name="SettingsLinkOpenLogFolderText" xml:space="preserve">
+    <value>Open log folder</value>
+  </data>
+  <data name="ErrorOpenLogFolderFailedFormat" xml:space="preserve">
+    <value>Could not open the log folder: {0}</value>
+  </data>
+  <data name="ButtonEmbedImportedComponentsText" xml:space="preserve">
+    <value>Embed Imported Components</value>
+  </data>
+  <data name="TooltipEmbedImportedComponents" xml:space="preserve">
+    <value>For a downloaded assembly (e.g. a STEP file) inserted through 3D Interconnect: breaks the link to the imported file, dissolves the imported subassembly and embeds its parts as virtual components of this assembly, so mates can make it move. Unsaved changes are saved first; the result is not saved — check it, then save.</value>
+  </data>
+  <data name="EmbedImportedComponentsConfirmTitle" xml:space="preserve">
+    <value>Embed imported components</value>
+  </data>
+  <data name="EmbedImportedComponentsConfirmMessage" xml:space="preserve">
+    <value>Unsaved changes to the assembly are saved first. Then the link to the imported file is broken, which can't be undone, the imported subassembly is dissolved and its parts are embedded as virtual components of this assembly. The imported file is then checked in to PDM, since the assembly no longer references it.
+
+The result is not saved. If it isn't right, close the assembly without saving to get back to the state saved just before.
+
+Continue?</value>
+  </data>
+  <data name="EmbedImportedComponentsDoneFormat" xml:space="preserve">
+    <value>Embedded {0} components as virtual components.</value>
+  </data>
+  <data name="EmbedImportedComponentsNothingFound" xml:space="preserve">
+    <value>This assembly has no imported subassembly to embed. Only a STEP or other non-native assembly inserted through 3D Interconnect, with its link intact, can be embedded.</value>
+  </data>
+  <data name="EmbedImportedComponentsReadOnly" xml:space="preserve">
+    <value>The assembly is open read-only. Check it out first, then try again.</value>
+  </data>
+  <data name="EmbedImportedComponentsFailedFormat" xml:space="preserve">
+    <value>Embedding stopped while {0}. The assembly has unsaved changes: close it without saving to get back to the saved file. Details are in the log.</value>
+  </data>
+  <data name="EmbedImportedComponentsSaveFailed" xml:space="preserve">
+    <value>The assembly could not be saved, so nothing was embedded. Save it yourself, then try again. Details are in the log.</value>
+  </data>
+  <data name="EmbedImportedComponentsCheckInCommentFormat" xml:space="preserve">
+    <value>Checked in by the GLADOS SOLIDWORKS Add-in after embedding into {0}</value>
+  </data>
+  <data name="EmbedImportedComponentsNotCheckedInFormat" xml:space="preserve">
+    <value>These imported files could not be checked in to PDM. Check them in by hand:
+{0}</value>
+  </data>
+  <data name="EmbedImportedComponentsStepBreakLink" xml:space="preserve">
+    <value>breaking the link to the imported file</value>
+  </data>
+  <data name="EmbedImportedComponentsStepSaveToWorkFolder" xml:space="preserve">
+    <value>saving the components to the temporary folder</value>
+  </data>
+  <data name="EmbedImportedComponentsStepDissolve" xml:space="preserve">
+    <value>dissolving the imported subassembly</value>
+  </data>
+  <data name="EmbedImportedComponentsStepMakeVirtual" xml:space="preserve">
+    <value>making the components virtual</value>
+  </data>
+  <data name="DataPortalFormTitleText" xml:space="preserve">
+    <value>GLADOS SOLIDWORKS Add-in | EPLAN Data Portal</value>
+  </data>
+  <data name="LabelDataPortalSearchText" xml:space="preserve">
+    <value>Order code, type number or name</value>
+  </data>
+  <data name="ButtonDataPortalSearchText" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="ButtonDataPortalTakeText" xml:space="preserve">
+    <value>Take selected</value>
+  </data>
+  <data name="ButtonDataPortalCancelText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ButtonDataPortalText" xml:space="preserve">
+    <value>Portal</value>
+  </data>
+  <data name="ColumnDataPortalTakeText" xml:space="preserve">
+    <value>Take</value>
+  </data>
+  <data name="ColumnDataPortalFieldText" xml:space="preserve">
+    <value>Field</value>
+  </data>
+  <data name="ColumnDataPortalCurrentText" xml:space="preserve">
+    <value>Current</value>
+  </data>
+  <data name="ColumnDataPortalPortalText" xml:space="preserve">
+    <value>Data Portal</value>
+  </data>
+  <data name="DataPortalSearchingText" xml:space="preserve">
+    <value>Searching the Data Portal…</value>
+  </data>
+  <data name="DataPortalNoHitsText" xml:space="preserve">
+    <value>The Data Portal knows no part for this.</value>
+  </data>
+  <data name="DataPortalHitsFormat" xml:space="preserve">
+    <value>{0} part(s) found.</value>
+  </data>
+  <data name="DataPortalSearchFailedFormat" xml:space="preserve">
+    <value>The Data Portal search failed: {0}</value>
+  </data>
+  <data name="DataPortalSearchFailedNoConnection" xml:space="preserve">
+    <value>The Data Portal search failed: GLADOS is not reachable.</value>
+  </data>
+  <data name="DataPortalExistingItemFormat" xml:space="preserve">
+    <value>Already in the catalogue as {0} ({1}). Check it before you create a second catalogue item.</value>
+  </data>
+  <data name="DataPortalExistingItemNoPartNumber" xml:space="preserve">
+    <value>without part number</value>
+  </data>
+  <data name="DataPortalNoSupplierFormat" xml:space="preserve">
+    <value>No GLADOS supplier carries the Data Portal code {0}, so the manufacturer can't be taken.</value>
+  </data>
+  <data name="DataPortalManufacturerFormat" xml:space="preserve">
+    <value>Manufacturer: {0}</value>
+  </data>
+  <data name="DataPortalPartNumberFormat" xml:space="preserve">
+    <value>EPLAN part number: {0}</value>
+  </data>
+  <data name="DataPortalOrderNumberFormat" xml:space="preserve">
+    <value>Order number: {0}</value>
+  </data>
+  <data name="DataPortalTypeNumberFormat" xml:space="preserve">
+    <value>Type number: {0}</value>
+  </data>
+  <data name="DataPortalProductFamilyFormat" xml:space="preserve">
+    <value>Product family: {0}</value>
+  </data>
+  <data name="DataPortalNoPictureText" xml:space="preserve">
+    <value>No picture</value>
+  </data>
+  <data name="LinkDataPortalPartPageText" xml:space="preserve">
+    <value>Open in the Data Portal</value>
+  </data>
+  <data name="LinkDataPortalFoundFormat" xml:space="preserve">
+    <value>Found in the EPLAN Data Portal ({0})</value>
+  </data>
+  <data name="LabelDataPortalLinkedFormat" xml:space="preserve">
+    <value>Data Portal part #{0}</value>
+  </data>
+  <data name="TooltipDataPortalSearch" xml:space="preserve">
+    <value>Look this order code up in the EPLAN Data Portal and take its data.</value>
+  </data>
+  <data name="TooltipDataPortalNoPermission" xml:space="preserve">
+    <value>The access token lacks the permission to use the EPLAN Data Portal (use:data_portal), which the lookup needs; create a token with it and set it in Settings.</value>
+  </data>
+  <data name="TooltipDataPortalFound" xml:space="preserve">
+    <value>Show the parts the Data Portal knows for this order code.</value>
+  </data>
+  <data name="SaveConflictFormTitleText" xml:space="preserve">
+    <value>GLADOS SOLIDWORKS Add-in | Changed in the file</value>
+  </data>
+  <data name="LabelSaveConflictIntroText" xml:space="preserve">
+    <value>These fields were changed in the file since the task pane loaded it (for example on the PDM data card), and you changed them as well. Which values should be saved?</value>
+  </data>
+  <data name="ColumnSaveConflictFieldText" xml:space="preserve">
+    <value>Field</value>
+  </data>
+  <data name="ColumnSaveConflictFileText" xml:space="preserve">
+    <value>In the file</value>
+  </data>
+  <data name="ColumnSaveConflictMineText" xml:space="preserve">
+    <value>Yours</value>
+  </data>
+  <data name="ButtonSaveConflictUseMineText" xml:space="preserve">
+    <value>Save mine</value>
+  </data>
+  <data name="ButtonSaveConflictKeepFileText" xml:space="preserve">
+    <value>Keep file values</value>
+  </data>
+  <data name="ButtonSaveConflictCancelText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="SaveConflictEmptyValueText" xml:space="preserve">
+    <value>(empty)</value>
+  </data>
+  <data name="SaveConflictUnreadableValueText" xml:space="preserve">
+    <value>(unreadable)</value>
+  </data>
+  <data name="FieldDataPortalPartText" xml:space="preserve">
+    <value>Data Portal Part</value>
+  </data>
+  <data name="TooltipReloadFromFileChangedOutside" xml:space="preserve">
+    <value>The properties were changed outside the add-in (for example on the PDM data card) while you had unsaved edits. Reload to see them; this discards your edits. Save keeps both: your edits on top of the changed file.</value>
+  </data>
+  <data name="SettingsVersionFormat" xml:space="preserve">
+    <value>Version {0}</value>
+  </data>
+  <data name="BackendVersionWarningShort" xml:space="preserve">
+    <value>Update the add-in</value>
+  </data>
+  <data name="BackendVersionWarningFormat" xml:space="preserve">
+    <value>GLADOS {0} serves API contract {1}, but this add-in ({2}) supports API contract {3}. Update the add-in. Until then it keeps working, but some functions may fail.</value>
+  </data>
+</root>

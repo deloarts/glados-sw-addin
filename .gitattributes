@@ -1,0 +1,6 @@
+* text=auto eol=crlf
+*.dll binary
+# GitHub Actions extracts each `run:` block into a shell script file verbatim; a CRLF-committed
+# workflow breaks its bash steps (stray \r before the interpreter even sees the line).
+*.yml eol=lf
+*.yaml eol=lf

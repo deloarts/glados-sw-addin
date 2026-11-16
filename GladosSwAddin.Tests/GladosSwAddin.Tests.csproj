@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Unit tests for the add-in's pure logic (parsing, canonicalisation, mapping resolution,
+    routing normalisation) - everything that runs without SOLIDWORKS. SDK-style, but it
+    references the classic add-in project, so build it with the Visual Studio MSBuild like the
+    rest of the solution (`dotnet build` cannot compile the add-in). The referenced
+    GladosSwAddin.dll is the ILRepack-merged one; internals are visible through
+    InternalsVisibleTo in the add-in's AssemblyInfo.cs.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>7.3</LangVersion>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>GladosSwAddin.Tests</RootNamespace>
+    <TreatWarningsAsErrors Condition=" '$(Configuration)' == 'Release' ">true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="4.4.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="4.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GladosSwAddin\GladosSwAddin.csproj" />
+  </ItemGroup>
+
+</Project>

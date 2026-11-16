@@ -1,0 +1,75 @@
+# Visual Studio user-specific files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build output
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio cache
+.vscode/
+.idea/
+.playground/
+
+# Build logs
+*.log
+
+# ReSharper / Rider
+_ReSharper*/
+*.DotSettings.user
+
+# NuGet
+*.nupkg
+.nuget/
+
+# Generated files
+*.dll
+*.exe
+*.pdb
+*.cache
+*.tmp
+
+# Test results
+TestResults/
+*.trx
+
+# Code coverage
+coverage/
+*.coverage
+
+# Deployment / installer output
+publish/
+
+# SOLIDWORKS generated files
+*.swp
+*.sldprt
+*.sldasm
+*.slddrw
+*.bak
+
+# COM registration / generated interop artifacts
+*.tlb
+*.reg
+
+# Windows files
+Thumbs.db
+Desktop.ini
+
+# OS files
+.DS_Store
+
+# Temporary files
+*.temp
+*.tmp
+~$*
+# Claude Code local settings
+.claude/settings.local.json
+
+# Local audit reports (/audit, /security-audit)
+.audit/
+
+# Machine-specific Claude Code instructions (local paths)
+CLAUDE.local.md

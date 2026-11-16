@@ -1,0 +1,75 @@
+<Project Sdk="WixToolset.Sdk/5.0.2">
+
+  <!--
+    Builds the per-machine MSI for the add-in's single merged GladosSwAddin.dll (see
+    ILRepack.targets in GladosSwAddin\). The ProjectReference below makes MSBuild build the
+    add-in first, in the same configuration, whether this project is built from Visual Studio,
+    from the command line or in CI - one command produces both:
+      MSBuild.exe GladosSwAddin.Installer\GladosSwAddin.Installer.wixproj -restore /p:Configuration=Release
+    (the full Visual Studio MSBuild, because the referenced add-in is a classic .NET Framework
+    WinForms project that `dotnet build` cannot compile). See docs/RELEASE.md.
+  -->
+
+  <PropertyGroup>
+    <OutputType>Package</OutputType>
+    <Platform>x64</Platform>
+
+    <!-- Where the merged add-in DLL to package comes from: the referenced project's output for
+         the configuration being built (bin\Debug or bin\Release, the csproj's own OutputPath
+         convention). Override with /p:GladosSwAddinDllSourcePath=... to package a different
+         build; the satellite resource assemblies are taken from the culture subfolders next to
+         that DLL. -->
+    <GladosSwAddinDllSourcePath Condition="'$(GladosSwAddinDllSourcePath)' == ''">..\GladosSwAddin\bin\$(Configuration)\GladosSwAddin.dll</GladosSwAddinDllSourcePath>
+    <GladosSwAddinDllSourceDir>$([System.IO.Path]::GetDirectoryName('$(GladosSwAddinDllSourcePath)'))\</GladosSwAddinDllSourceDir>
+    <DefineConstants>$(DefineConstants);GladosSwAddinDllSourcePath=$(GladosSwAddinDllSourcePath);GladosSwAddinDllSourceDir=$(GladosSwAddinDllSourceDir)</DefineConstants>
+
+    <!-- ICE64 ("this component installs a per-user registry value from a per-machine package")
+         fires for GladosSwAddinStartupComponent in Package.wxs on purpose: SOLIDWORKS reads
+         AddInsStartup from HKCU, so a per-user key from an otherwise per-machine installer is
+         the correct shape here, not a bug to route around. See docs/RELEASE.md. -->
+    <!-- ICE61 ("this product should remove only older versions of itself") fires because
+         MajorUpgrade sets AllowSameVersionUpgrades in Package.wxs: a rebuilt MSI of the
+         same version is meant to replace the installed copy rather than install beside it. -->
+    <SuppressIces>ICE64;ICE61</SuppressIces>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.Netfx.wixext" Version="5.0.2" />
+  </ItemGroup>
+
+  <!-- Build dependency on the add-in (see the header comment). WiX also exposes the referenced
+       project's outputs as preprocessor variables (var.GladosSwAddin.TargetPath, ...); the
+       explicit GladosSwAddinDllSourcePath property above is kept so the same path feeds the
+       versioned-rename target below and can still be overridden. -->
+  <ItemGroup>
+    <ProjectReference Include="..\GladosSwAddin\GladosSwAddin.csproj" />
+  </ItemGroup>
+
+  <!-- Package.wxs is picked up by the SDK's default **/*.wxs glob - no explicit Compile item
+       needed (and adding one would compile it twice). -->
+
+  <!--
+    MSI file names don't carry a version by default (OutputName can't safely be computed at
+    evaluation time - see https://github.com/orgs/wixtoolset/discussions/7317). Instead, rename
+    the built MSI to a versioned name after Build, reading the version straight from the same
+    source DLL Package.wxs binds the MSI's own Version to (!(bind.fileVersion.GladosSwAddinDll)),
+    so the two can never disagree.
+  -->
+  <Target Name="RenameVersionedGladosSwAddinMsi" AfterTargets="Build">
+    <GetAssemblyIdentity AssemblyFiles="$(GladosSwAddinDllSourcePath)">
+      <Output TaskParameter="Assemblies" ItemName="_GladosSwAddinAssemblyIdentity" />
+    </GetAssemblyIdentity>
+    <PropertyGroup>
+      <_GladosSwAddinFileVersion>%(_GladosSwAddinAssemblyIdentity.Version)</_GladosSwAddinFileVersion>
+      <_GladosSwAddinSemVer>$(_GladosSwAddinFileVersion.Substring(0, $(_GladosSwAddinFileVersion.LastIndexOf('.'))))</_GladosSwAddinSemVer>
+      <_GladosSwAddinVersionedMsi>$(OutDir)GladosSwAddin-$(_GladosSwAddinSemVer).msi</_GladosSwAddinVersionedMsi>
+    </PropertyGroup>
+    <Delete Files="$(_GladosSwAddinVersionedMsi)" Condition="'$(_GladosSwAddinSemVer)' != '' and Exists('$(_GladosSwAddinVersionedMsi)')" />
+    <Move
+      SourceFiles="$(TargetPath)"
+      DestinationFiles="$(_GladosSwAddinVersionedMsi)"
+      Condition="'$(_GladosSwAddinSemVer)' != ''"
+    />
+  </Target>
+
+</Project>

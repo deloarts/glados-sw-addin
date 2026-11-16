@@ -1,0 +1,33 @@
+# Editor and analyzer settings shared by Visual Studio, Rider and the command-line build.
+root = true
+
+[*]
+end_of_line = crlf
+indent_style = space
+trim_trailing_whitespace = true
+
+[*.cs]
+indent_size = 4
+insert_final_newline = true
+
+[*.{csproj,wixproj,targets,props,resx,wxs,xml,config}]
+indent_size = 2
+
+# GitHub Actions requires LF (see .gitattributes).
+[*.{yml,yaml}]
+end_of_line = lf
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+# Code analysis (Microsoft.CodeAnalysis.NetAnalyzers). Only the categories that catch real
+# defects are raised to warnings - Release builds treat warnings as errors, so every rule here
+# is a hard gate. Style-only rules (CA1822 "mark as static" and friends) stay at their
+# defaults so they inform in the IDE without failing the build.
+[*.cs]
+dotnet_analyzer_diagnostic.category-Globalization.severity = warning
+dotnet_analyzer_diagnostic.category-Reliability.severity = warning
+dotnet_analyzer_diagnostic.category-Security.severity = warning
+dotnet_analyzer_diagnostic.category-Usage.severity = warning
+dotnet_diagnostic.CA1001.severity = warning

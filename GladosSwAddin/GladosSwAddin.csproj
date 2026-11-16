@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7C74E4FE-AE73-48BE-AC51-1EFAB4B5F523}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GladosSwAddin</RootNamespace>
+    <AssemblyName>GladosSwAddin</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <!-- Pinned rather than implied by the net48 default: the codebase is deliberately C# 7.3
+         (no records, init-only setters, switch expressions or target-typed new), and a
+         toolchain whose default drifts must fail the build rather than quietly allow them. -->
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RegisterForComInterop>true</RegisterForComInterop>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <!-- Explicit (matches the implicit default) so Release builds and CI never touch
+         HKCR: only Debug registers the add-in via RegisterForComInterop above. -->
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <!-- Release is what CI and release.yml build, so every compiler and analyzer warning (see
+         .editorconfig for which analyzer rules are raised) fails the merge gate. Debug stays
+         lenient so work in progress still compiles. -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Embedded as the assembly's Win32 icon (csc /win32icon), so Explorer and the installer
+         show the Glados logo on GladosSwAddin.dll. Visual Studio's project dialog greys this
+         out for class libraries; it is set by hand and works for a DLL all the same. -->
+    <ApplicationIcon>Resources\Icons\logo.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <!--
+    SOLIDWORKS API interop assemblies. By default they come from the Visiativ.SOLIDWORKS.Interop
+    package (Visiativ is the SOLIDWORKS reseller; one package version per SOLIDWORKS major
+    release, 33.x = 2025), pinned to the OLDEST SOLIDWORKS version the add-in supports: newer
+    releases only add API members, so building against the oldest keeps the add-in loadable on
+    every version from that one onward (see docs/RELEASE.md, "upgrading the solidworks interop
+    assemblies").
+
+    Fallback: set SolidWorksInteropPath (MSBuild property or environment variable) to a folder
+    holding the three SolidWorks.Interop.*.dll files - normally a local installation's
+    `SOLIDWORKS Corp\SOLIDWORKS\api\redist` - to build against those instead, e.g. offline or to
+    test against a specific service pack. CI always uses the package.
+
+    Either way the interop types are embedded (EmbedInteropTypes), so no SolidWorks.Interop.*
+    file ships or is referenced at runtime; CI verifies that on the merged assembly.
+  -->
+  <ItemGroup Condition=" '$(SolidWorksInteropPath)' == '' ">
+    <PackageReference Include="Visiativ.SOLIDWORKS.Interop" Version="33.0.0">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <!-- NuGet adds package assemblies as plain references, which would link the interop
+       assemblies instead of embedding their types. Embedding is required, not just tidier:
+       besides keeping SolidWorks.Interop.* out of the output, it is what makes COM members
+       typed as object usable as dynamic, which the code relies on. Package references carry
+       no package-id metadata in this classic project, so they are matched by their path. -->
+  <Target Name="EmbedSolidWorksInteropTypes" AfterTargets="ResolveNuGetPackageAssets" BeforeTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <Reference Condition="$([System.String]::Copy('%(Reference.Identity)').ToLowerInvariant().Contains('visiativ.solidworks.interop'))">
+        <EmbedInteropTypes>True</EmbedInteropTypes>
+      </Reference>
+    </ItemGroup>
+  </Target>
+  <!-- NuGet also queues the package's DLLs for copy-to-output on its own; embedded interop
+       assemblies are never needed next to GladosSwAddin.dll. -->
+  <Target Name="SkipCopyingSolidWorksInterop" AfterTargets="ResolveAssemblyReferences" BeforeTargets="CopyFilesToOutputDirectory">
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="$([System.String]::Copy('%(ReferenceCopyLocalPaths.Identity)').ToLowerInvariant().Contains('visiativ.solidworks.interop'))" />
+    </ItemGroup>
+  </Target>
+  <!-- The fallback references are added by a target rather than a conditional ItemGroup: Visual
+       Studio's classic project system lists every Reference regardless of its ItemGroup's
+       condition, and reported the three as "could not be found" whenever the property is unset.
+       Running before ResolveAssemblyReferences, they still reach both builds and IntelliSense. -->
+  <Target Name="AddLocalSolidWorksInteropReferences" BeforeTargets="ResolveAssemblyReferences" Condition=" '$(SolidWorksInteropPath)' != '' ">
+    <ItemGroup>
+      <Reference Include="SolidWorks.Interop.sldworks">
+        <HintPath>$(SolidWorksInteropPath)\SolidWorks.Interop.sldworks.dll</HintPath>
+        <EmbedInteropTypes>True</EmbedInteropTypes>
+        <Private>False</Private>
+      </Reference>
+      <Reference Include="SolidWorks.Interop.swconst">
+        <HintPath>$(SolidWorksInteropPath)\SolidWorks.Interop.swconst.dll</HintPath>
+        <EmbedInteropTypes>True</EmbedInteropTypes>
+        <Private>False</Private>
+      </Reference>
+      <Reference Include="SolidWorks.Interop.swpublished">
+        <HintPath>$(SolidWorksInteropPath)\SolidWorks.Interop.swpublished.dll</HintPath>
+        <EmbedInteropTypes>True</EmbedInteropTypes>
+        <Private>False</Private>
+      </Reference>
+    </ItemGroup>
+  </Target>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.401">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.46">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Api\ApiRoutes.cs" />
+    <Compile Include="Api\ConditionalGetResult.cs" />
+    <Compile Include="Api\GladosApi.cs" />
+    <Compile Include="Api\GladosApiClient.cs" />
+    <Compile Include="Api\GladosApiException.cs" />
+    <Compile Include="Api\PatContract.cs" />
+    <Compile Include="Api\PagingHelper.cs" />
+    <Compile Include="Api\QueryStringBuilder.cs" />
+    <Compile Include="Api\Filters\ArticleGroupFilterParams.cs" />
+    <Compile Include="Api\Filters\BoughtItemFilterParams.cs" />
+    <Compile Include="Api\Filters\EdpMatchFilterParams.cs" />
+    <Compile Include="Api\Filters\EdpSearchFilterParams.cs" />
+    <Compile Include="Api\Filters\FabricationMethodFilterParams.cs" />
+    <Compile Include="Api\Filters\IFilterParams.cs" />
+    <Compile Include="Api\Filters\InspectionMethodFilterParams.cs" />
+    <Compile Include="Api\Filters\MadeItemFilterParams.cs" />
+    <Compile Include="Api\Filters\ProductFilterParams.cs" />
+    <Compile Include="Api\Filters\ProjectFilterParams.cs" />
+    <Compile Include="Api\Filters\SourceItemFilterParams.cs" />
+    <Compile Include="Api\Filters\SourceItemTypeFilterParams.cs" />
+    <Compile Include="Api\Filters\SupplierFilterParams.cs" />
+    <Compile Include="Api\Models\ArticleGroupResponse.cs" />
+    <Compile Include="Api\Models\BoughtItemPdfFileResponse.cs" />
+    <Compile Include="Api\Models\BoughtItemResponse.cs" />
+    <Compile Include="Api\Models\CustomerResponse.cs" />
+    <Compile Include="Api\Models\EdpAvailabilityResponse.cs" />
+    <Compile Include="Api\Models\EdpSearchResponse.cs" />
+    <Compile Include="Api\Models\Enums.cs" />
+    <Compile Include="Api\Models\FabricationMethodResponse.cs" />
+    <Compile Include="Api\Models\FieldMappingResponse.cs" />
+    <Compile Include="Api\Models\InspectionMethodResponse.cs" />
+    <Compile Include="Api\Models\LookupsResponse.cs" />
+    <Compile Include="Api\Models\MadeItemProcessResponse.cs" />
+    <Compile Include="Api\Models\MadeItemResponse.cs" />
+    <Compile Include="Api\Models\PageResponse.cs" />
+    <Compile Include="Api\Models\PatVersionResponse.cs" />
+    <Compile Include="Api\Models\PdmValidationResponse.cs" />
+    <Compile Include="Api\Models\ProductResponse.cs" />
+    <Compile Include="Api\Models\ProjectResponse.cs" />
+    <Compile Include="Api\Models\PublicUserResponse.cs" />
+    <Compile Include="Api\Models\SourceItemCreateRequest.cs" />
+    <Compile Include="Api\Models\SourceItemResponse.cs" />
+    <Compile Include="Api\Models\SourceItemTypeResponse.cs" />
+    <Compile Include="Api\Models\CustomerLookupResponse.cs" />
+    <Compile Include="Api\Models\SupplierResponse.cs" />
+    <Compile Include="Api\Models\UserResponse.cs" />
+    <Compile Include="Api\Services\ArticleGroupsApiService.cs" />
+    <Compile Include="Api\Services\AuthApiService.cs" />
+    <Compile Include="Api\Services\BoughtItemsApiService.cs" />
+    <Compile Include="Api\Services\DataPortalApiService.cs" />
+    <Compile Include="Api\Services\FabricationMethodsApiService.cs" />
+    <Compile Include="Api\Services\FieldMappingApiService.cs" />
+    <Compile Include="Api\Services\InspectionMethodsApiService.cs" />
+    <Compile Include="Api\Services\LookupsApiService.cs" />
+    <Compile Include="Api\Services\MadeItemsApiService.cs" />
+    <Compile Include="Api\Services\PdmValidationApiService.cs" />
+    <Compile Include="Api\Services\ProductsApiService.cs" />
+    <Compile Include="Api\Services\ProjectsApiService.cs" />
+    <Compile Include="Api\Services\SourceItemsApiService.cs" />
+    <Compile Include="Api\Services\SourceItemTypesApiService.cs" />
+    <Compile Include="Api\Services\SuppliersApiService.cs" />
+    <Compile Include="Api\Services\UsersApiService.cs" />
+    <Compile Include="Api\Services\VersionApiService.cs" />
+    <Compile Include="Forms\DataPortalPartForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DataPortalPartForm.Designer.cs">
+      <DependentUpon>DataPortalPartForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DesignerProbeControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\DesignerProbeControl.Designer.cs">
+      <DependentUpon>DesignerProbeControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\GladosTaskPaneControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\GladosTaskPaneControl.Designer.cs">
+      <DependentUpon>GladosTaskPaneControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\GladosTaskPaneControl.Customer.cs">
+      <DependentUpon>GladosTaskPaneControl.cs</DependentUpon>
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\GladosTaskPaneControl.PropertyWatch.cs">
+      <DependentUpon>GladosTaskPaneControl.cs</DependentUpon>
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\GladosTaskPaneControl.SaveMerge.cs">
+      <DependentUpon>GladosTaskPaneControl.cs</DependentUpon>
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\ProcessRoutingControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\ProcessRoutingControl.Designer.cs">
+      <DependentUpon>ProcessRoutingControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SaveConflictForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SaveConflictForm.Designer.cs">
+      <DependentUpon>SaveConflictForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SettingsForm.Designer.cs">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SourceItemPickerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SourceItemPickerForm.Designer.cs">
+      <DependentUpon>SourceItemPickerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\AddinInfo.cs" />
+    <Compile Include="Helpers\AssemblyRoutingDefaults.cs" />
+    <Compile Include="Helpers\DimensionSpec.cs" />
+    <Compile Include="Helpers\FontManager.cs" />
+    <Compile Include="Helpers\IconManager.cs" />
+    <Compile Include="Helpers\LookupOrder.cs" />
+    <Compile Include="Helpers\MaterialIcons.cs" />
+    <Compile Include="Helpers\SourceItemLabelComposer.cs" />
+    <Compile Include="Helpers\TextBoxCueBanner.cs" />
+    <Compile Include="Helpers\ThemeColors.cs" />
+    <Compile Include="Models\BoughtItemLookupResult.cs" />
+    <Compile Include="Models\BoughtItemProperties.cs" />
+    <Compile Include="Models\DataPortalTakeover.cs" />
+    <Compile Include="Models\FieldMapping.cs" />
+    <Compile Include="Models\LookupCacheEnvelope.cs" />
+    <Compile Include="Models\LookupSnapshot.cs" />
+    <Compile Include="Models\MadeItemLookupResult.cs" />
+    <Compile Include="Models\MadeItemProperties.cs" />
+    <Compile Include="Models\ProcessStep.cs" />
+    <Compile Include="Models\Settings.cs" />
+    <Compile Include="Resources\Strings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Services\ApplicationServices.cs" />
+    <Compile Include="Services\BoughtItemSyncService.cs" />
+    <Compile Include="Services\CredentialService.cs" />
+    <Compile Include="Services\CustomerFolderMatcher.cs" />
+    <Compile Include="Services\DownloadsReferenceService.cs" />
+    <Compile Include="Services\FieldMappingService.cs" />
+    <Compile Include="Services\ImportedComponentsService.cs" />
+    <Compile Include="Services\LookupCacheService.cs" />
+    <Compile Include="Services\Log.cs" />
+    <Compile Include="Services\LookupService.cs" />
+    <Compile Include="Services\MadeItemSyncService.cs" />
+    <Compile Include="Services\PdmCheckInService.cs" />
+    <Compile Include="Services\RequiredFieldRuleEvaluator.cs" />
+    <Compile Include="Services\SaveMergeService.cs" />
+    <Compile Include="Services\SettingsService.cs" />
+    <Compile Include="Services\SwCustomPropertyService.cs" />
+    <Compile Include="SwAddin.cs" />
+    <Compile Include="SwAddinAttribute.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Icons\logo.ico" />
+    <!-- The Add-Ins dialog icon (SwAddin.RegisterFunction and the installer register it as
+         "Icon Path"); copied next to the DLL under the DLL's own name. TargetPath rather than
+         Link: Visual Studio refuses a Link to a file inside the project folder. -->
+    <Content Include="Resources\Icons\GladosSwAddin.png">
+      <TargetPath>GladosSwAddin.png</TargetPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="Forms\SettingsForm.resx">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SourceItemPickerForm.resx">
+      <DependentUpon>SourceItemPickerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\CommandIcons\Glados20.bmp" />
+    <EmbeddedResource Include="Resources\CommandIcons\Glados32.bmp" />
+    <EmbeddedResource Include="Resources\CommandIcons\Glados40.bmp" />
+    <EmbeddedResource Include="Resources\CommandIcons\Glados64.bmp" />
+    <EmbeddedResource Include="Resources\CommandIcons\Glados96.bmp" />
+    <EmbeddedResource Include="Resources\CommandIcons\Glados128.bmp" />
+    <EmbeddedResource Include="Resources\Icons\logo.bmp" />
+    <EmbeddedResource Include="Resources\Icons\logo.png" />
+    <EmbeddedResource Include="Resources\Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Strings.de-AT.resx">
+      <DependentUpon>Strings.resx</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Fonts\Audiowide-Regular.ttf" />
+    <EmbeddedResource Include="Resources\Fonts\MaterialIcons-Regular.ttf" />
+    <None Include="app.config" />
+    <None Include="ILRepack.targets" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <EmbeddedResource Include="Resources\Fonts\Play-Regular.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Forms\GladosTaskPaneControl.resx">
+      <DependentUpon>GladosTaskPaneControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ProcessRoutingControl.resx">
+      <DependentUpon>ProcessRoutingControl.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- ILRepack.Lib.MSBuild.Task: merges GladosSwAddin.dll and Newtonsoft.Json.dll
+       into a single GladosSwAddin.dll after every build, see
+       ILRepack.targets for the actual merge target. Its build\ILRepack.Lib.MSBuild.Task.targets
+       (which supplies the ILRepack task itself) is imported automatically by the
+       ILRepack.Lib.MSBuild.Task PackageReference above via NuGet's restore-generated
+       obj\GladosSwAddin.csproj.nuget.g.targets - no manual Import needed. -->
+</Project>

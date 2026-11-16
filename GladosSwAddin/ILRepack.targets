@@ -1,0 +1,64 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--
+    Custom merge target for ILRepack.Lib.MSBuild.Task (see the PackageReference in
+    GladosSwAddin.csproj).
+
+    The mere presence of this file (at the path ILRepack.Lib.MSBuild.Task.targets defaults
+    ILRepackTargetsFile to, i.e. next to the csproj) suppresses that package's own built-in
+    "ILRepack" AfterTargets="Build" target (its Condition requires this file to NOT exist), so
+    this file supplies the real merge step instead. The target below is deliberately NOT named
+    "ILRepack" - the shipped target is declared (with a Condition that then evaluates false)
+    after this file is imported, and a same-named target declared later in the project always
+    overrides an earlier one, which would silently discard this target instead of skipping it.
+
+    SolidWorks loads exactly one add-in assembly (GladosSwAddin.dll); this merges the one
+    managed dependency it ships (Newtonsoft.Json) into that single file
+    so nothing else needs to sit next to it in the SolidWorks addins folder. Runs after every
+    build, in every configuration - Debug included, so a locally registered Debug build behaves
+    the same as the shipped Release one instead of only being tested pre-merge.
+
+    SolidWorks.Interop.* are not part of this: they are EmbedInteropTypes=True references, so
+    their types are compiled straight into GladosSwAddin.dll already and the interop DLLs
+    themselves are never copied to the output folder in the first place.
+  -->
+  <PropertyGroup>
+    <!-- Reference assemblies (not the runtime GAC) ILRepack/Mono.Cecil needs to resolve
+         mscorlib and friends while merging; FrameworkPathOverride is the same path MSBuild
+         itself resolves for TargetFrameworkVersion=v4.8 builds. -->
+    <ILRepackLibraryPath Condition="'$(FrameworkPathOverride)' != ''">$(FrameworkPathOverride)</ILRepackLibraryPath>
+    <ILRepackLibraryPath Condition="'$(ILRepackLibraryPath)' == ''">$(MSBuildProgramFiles32)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8</ILRepackLibraryPath>
+  </PropertyGroup>
+
+  <Target Name="MergeGladosSwAddinAssemblies" AfterTargets="Build">
+    <ItemGroup>
+      <_ILRepackInput Include="$(OutputPath)$(TargetName)$(TargetExt)" />
+      <_ILRepackInput Include="$(OutputPath)Newtonsoft.Json.dll" />
+    </ItemGroup>
+
+    <ILRepack
+      Parallel="true"
+      Internalize="true"
+      DebugInfo="true"
+      TargetKind="SameAsPrimaryAssembly"
+      TargetPlatformVersion="v4"
+      TargetPlatformDirectory="$(ILRepackLibraryPath)"
+      LibraryPath="$(ILRepackLibraryPath);$(OutputPath)"
+      InputAssemblies="@(_ILRepackInput)"
+      OutputFile="$(OutputPath)$(TargetName)$(TargetExt)"
+    />
+
+    <!-- The input just internalized into GladosSwAddin.dll (plus their .xml/.pdb, where
+         present) no longer need to ship next to it. GladosSwAddin.dll.config is dropped too:
+         nothing in the add-in calls ConfigurationManager/OpenExeConfiguration, and the two
+         Properties.Settings entries it would otherwise seed both default to "" already via
+         [DefaultSettingValueAttribute("")] compiled into Settings.Designer.cs, so the file is
+         redundant even for that. -->
+    <ItemGroup>
+      <_ILRepackMergedInputFiles Include="$(OutputPath)Newtonsoft.Json.dll" />
+      <_ILRepackMergedInputFiles Include="$(OutputPath)Newtonsoft.Json.xml" />
+      <_ILRepackMergedInputFiles Include="$(OutputPath)Newtonsoft.Json.pdb" />
+      <_ILRepackMergedInputFiles Include="$(OutputPath)$(TargetName).dll.config" />
+    </ItemGroup>
+    <Delete Files="@(_ILRepackMergedInputFiles)" Condition="Exists('%(_ILRepackMergedInputFiles.Identity)')" />
+  </Target>
+</Project>

@@ -51,7 +51,9 @@ jobs:
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
-          queries: security-and-quality
+          # Security rules only: code quality is enforced by the build's analyzers
+          # (TreatWarningsAsErrors), and the quality suite mostly flags designer-generated code.
+          queries: security-extended
 
       - name: Set up MSBuild
         if: matrix.language == 'csharp'

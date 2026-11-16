@@ -49,13 +49,14 @@
     <Property Id="ARPHELPLINK" Value="$(var.ProjectUrl)/issues" />
     <Property Id="ARPURLUPDATEINFO" Value="$(var.ProjectUrl)/releases" />
 
-    <!-- .NET Framework 4.8's release value is 528040 (the same scheme covers every 4.5-4.8
-         release; NETFRAMEWORK45 is the extension's property name for it regardless of which of
-         those releases is actually found) - see
+    <!-- The Netfx extension sets WIX_IS_NETFRAMEWORK_48_OR_LATER_INSTALLED after AppSearch when
+         the .NET Framework 4.x release value is 528040 (4.8) or higher. Don't compare the raw
+         value here: Windows Installer reads the DWORD as the string "#533509", and a string
+         compared with a number is always false, so the installer would refuse every machine - see
          https://learn.microsoft.com/dotnet/framework/migration-guide/how-to-determine-which-versions-are-installed -->
-    <PropertyRef Id="NETFRAMEWORK45" />
+    <PropertyRef Id="WIX_IS_NETFRAMEWORK_48_OR_LATER_INSTALLED" />
     <Launch
-      Condition="Installed OR NETFRAMEWORK45 &gt;= 528040"
+      Condition="Installed OR WIX_IS_NETFRAMEWORK_48_OR_LATER_INSTALLED"
       Message="$(var.ProductName) requires .NET Framework 4.8 or later. Install it, then run this installer again." />
 
     <Feature Id="Main" Title="$(var.ProductName)" Level="1">

@@ -29,12 +29,12 @@ Dimensions (the slug in brackets is what `$ARGUMENTS` may name):
   custom-property I/O, and that connection-dependent enable/disable logic lives in
   `GladosTaskPaneControl.ApplyConnectionState` and nowhere else. Use the `architecture` skill
   as the reference.
-- **[sync-invariant]** The add-in never authors item data in Glados (README "Sync strategy").
+- **[sync-invariant]** The add-in never authors item data in Glados (docs/DESIGN.md "Sync strategy").
   Enumerate every non-GET request in `Api/` and its callers. The known, deliberate exceptions
   are the PAT test (`auth/login/test-personal-access-token`), the advisory
   `POST pat/pdm/validate`, and source-item creation through the idempotent POST
   (`SourceItemsApiService.CreateSourceItemAsync`). Any other server write is a high finding; a
-  known exception that is undocumented in README/CLAUDE.md is a docs finding.
+  known exception that is undocumented in docs/DESIGN.md or CLAUDE.md is a docs finding.
 - **[field-ownership]** Against `docs/FIELD_OWNERSHIP.md`: no write to a `Pdm`-owned property
   (every write path must pass `GuardNotPdmOwned`), no read or write of Server-owned
   write-backs, no touching `Web`-owned fields, `Glados.Kind` write-once, derived `*Name`/label
@@ -103,7 +103,7 @@ Dimensions (the slug in brackets is what `$ARGUMENTS` may name):
   behaviour; `private static` helpers that should become `internal static` to be testable.
 - **[dead-code]** Unused classes, members, resources, icons, `ApiRoutes` entries, filter
   parameters, NuGet packages, and csproj items.
-- **[docs]** README, `docs/FIELD_OWNERSHIP.md`, `docs/RELEASE.md`, `SECURITY.md`, `CHANGELOG.md`
+- **[docs]** README, `docs/DESIGN.md`, `docs/FIELD_OWNERSHIP.md`, `docs/RELEASE.md`, `SECURITY.md`, `CHANGELOG.md`
   and `CLAUDE.md` claims that no longer match the code (cite both the doc line and the code
   line).
 - **[industry-standard]** Anything a reviewer of a production .NET Framework WinForms/COM

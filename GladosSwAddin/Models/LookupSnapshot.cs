@@ -13,7 +13,7 @@ namespace GladosSwAddin.Models
     /// LookupService.Current atomically; never mutated in place. Every row is kept, including
     /// archived ones, so id-to-name resolution always has an answer; it's the task pane's picker
     /// code that filters Archived out of what it offers to pick from (see
-    /// docs/FIELD_OWNERSHIP.md and README's derived-property rules).</summary>
+    /// docs/FIELD_OWNERSHIP.md and docs/DESIGN.md derived-property rules).</summary>
     public sealed class LookupSnapshot
     {
         /// <summary>The state before anything has ever been loaded (no cache on disk yet, no

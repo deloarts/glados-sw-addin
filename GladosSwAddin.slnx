@@ -3,6 +3,7 @@
     <File Path=".gitattributes" />
     <File Path=".gitignore" />
     <File Path="CLAUDE.md" />
+    <File Path="docs/DESIGN.md" />
     <File Path="docs/FIELD_OWNERSHIP.md" />
     <File Path="docs/RELEASE.md" />
     <File Path="README.md" />

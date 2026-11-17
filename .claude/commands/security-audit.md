@@ -50,7 +50,7 @@ Arguments given: `$ARGUMENTS`
   stay `None`; no `$type` honoured anywhere), unbounded response sizes or paging loops a
   malicious server could make endless (`Api/PagingHelper.cs`), server strings written into
   custom properties: could a value be interpreted by SOLIDWORKS as a linked expression
-  (`$PRP:`, `"SW-..."`, `=`) and leak or rewrite other properties (README "Linked
+  (`$PRP:`, `"SW-..."`, `=`) and leak or rewrite other properties (docs/DESIGN.md "Linked
   expressions on Save")? Server-supplied URLs opened with `Process.Start` (every call site must allow
   only `http`/`https`, never `file:`, UNC paths or other shell-executable schemes), and
   server-supplied names used as file names or paths.

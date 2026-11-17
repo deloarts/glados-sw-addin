@@ -12,7 +12,7 @@ here routinely read both for reference. Machine-specific paths (where the `glado
 and MSBuild live, how a shell reaches them) belong in a gitignored `CLAUDE.local.md`, never in
 this file or other committed files.
 
-**The invariant** (README "Sync strategy"): the add-in never authors item data in Glados.
+**The invariant** (docs/DESIGN.md "Sync strategy"): the add-in never authors item data in Glados.
 Every write goes to the SolidWorks document; API calls are reads, plus the advisory
 `POST pat/pdm/validate` (changes nothing server-side) and one documented exception: the
 made-item source-item picker can create a source item (`SourceItemsApiService.CreateSourceItemAsync`,
@@ -63,7 +63,7 @@ No other catalogue entity is ever created or edited.
   `ModelDoc2.SetSaveFlag()`) — the SolidWorks custom-property APIs don't set the modified
   flag themselves, and without it users can close the file losing everything just saved.
 - Writes fan out to document level and every configuration in the same Save
-  (`WriteText` → `WriteAllScopes`); reads prefer document level. See README
+  (`WriteText` → `WriteAllScopes`); reads prefer document level. See docs/DESIGN.md
   "Write scopes and timing".
 
 ## Commands
@@ -170,7 +170,8 @@ No other catalogue entity is ever created or edited.
 
 ## Docs
 
-- `README.md` — sync strategy, custom property convention, write scopes/timing, linked
+- `README.md` — short overview: features, requirements, install, build commands.
+- `docs/DESIGN.md` — sync strategy, custom property convention, write scopes/timing, linked
   expressions, pre-release validation, lookup cache + Reload. Read before touching sync or
   property code.
 - `docs/FIELD_OWNERSHIP.md` — field-ownership rules (this repo's copy; the backend keeps the

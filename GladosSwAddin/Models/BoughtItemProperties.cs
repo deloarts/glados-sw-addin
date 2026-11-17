@@ -48,7 +48,7 @@ namespace GladosSwAddin.Models
         /// <summary>Resolved clear text for ManufacturerId, so PDM data cards and BOMs can show
         /// and filter on a name instead of an integer. Denormalized and therefore possibly stale:
         /// display fallback only — never compared against Glados and never used to match an item.
-        /// See "Rules for derived properties" in README.md.</summary>
+        /// See "Rules for derived properties" in docs/DESIGN.md.</summary>
         public string ManufacturerName { get; set; }
 
         /// <summary>Resolved clear text for ArticleGroupIds, positionally aligned with it. Same

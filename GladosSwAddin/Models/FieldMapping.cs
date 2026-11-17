@@ -211,7 +211,7 @@ namespace GladosSwAddin.Models
     }
 
     /// <summary>The literal "made"/"bought" text ItemKind is written and read as on a
-    /// document — Glados.Kind, add-in-written, write-once — see README's "Kind decides which
+    /// document — Glados.Kind, add-in-written, write-once — see docs/DESIGN.md "Kind decides which
     /// catalogue". Deliberately not [EnumMember]-driven like ItemField's wire names: ItemKind
     /// predates the field-mapping sync and its values are compared against comboBoxSource's own
     /// combo items (GladosTaskPaneControl.IsBoughtSource/IsMadeSource) rather than resolved

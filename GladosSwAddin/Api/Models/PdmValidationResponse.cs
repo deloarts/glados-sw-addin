@@ -6,7 +6,7 @@ namespace GladosSwAddin.Api.Models
     /// reporting whether the active document's mapped properties would be accepted by PDM
     /// ingest, without touching PDM or the catalogue. Advisory only: nothing in the add-in
     /// depends on this succeeding, and a failed or unreachable check never blocks Save. See
-    /// README.md's "Validation before release".</summary>
+    /// docs/DESIGN.md "Validation before release".</summary>
     public class PdmValidationResponse
     {
         public bool Ok { get; set; }

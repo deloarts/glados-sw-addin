@@ -65,9 +65,17 @@ namespace GladosSwAddin.Forms
         private readonly ToolTip _createTooltip = new ToolTip();
 
         /// <summary>The row currently selected in the grid — preselected from the id passed into
-        /// the constructor (the document's current pick, even if archived), then tracked live off
-        /// dataGridViewSourceItems.SelectionChanged. Null means nothing selected.</summary>
+        /// the constructor (the document's current pick, even if archived), set to a freshly
+        /// created item after Create, then tracked live off dataGridViewSourceItems.SelectionChanged
+        /// (except while RepopulateGrid rebuilds the rows). Null means nothing selected.</summary>
         private int? _selectedId;
+
+        /// <summary>True while RepopulateGrid clears and refills the grid. Once the dialog is
+        /// showing, Rows.Clear() and the first Rows.Add() each raise SelectionChanged with no row
+        /// selected, which would overwrite _selectedId with null before RepopulateGrid gets to
+        /// reselect it — dropping the pick on every filter change, lookup refresh, and Create.
+        /// dataGridViewSourceItems_SelectionChanged ignores the grid while this is set.</summary>
+        private bool _repopulatingGrid;
 
         /// <summary>The signed-in user's permissions from GET /pat/users/me, fetched once in
         /// SourceItemPickerForm_Load. Null both before that call completes and when it fails or
@@ -325,27 +333,36 @@ namespace GladosSwAddin.Forms
 
         private void RepopulateGrid(List<SourceItemResponse> items)
         {
-            dataGridViewSourceItems.SuspendLayout();
-            dataGridViewSourceItems.Rows.Clear();
-            foreach (var item in items)
+            _repopulatingGrid = true;
+            try
             {
-                int rowIndex = dataGridViewSourceItems.Rows.Add(
-                    item.TypeName,
-                    item.Dimension,
-                    item.Material,
-                    item.Mass?.ToString(CultureInfo.CurrentCulture) ?? string.Empty,
-                    item.ManufacturerName,
-                    item.OrderCode1,
-                    StatusDisplayText(item.Status));
+                dataGridViewSourceItems.SuspendLayout();
+                dataGridViewSourceItems.Rows.Clear();
+                foreach (var item in items)
+                {
+                    int rowIndex = dataGridViewSourceItems.Rows.Add(
+                        item.TypeName,
+                        item.Dimension,
+                        item.Material,
+                        item.Mass?.ToString(CultureInfo.CurrentCulture) ?? string.Empty,
+                        item.ManufacturerName,
+                        item.OrderCode1,
+                        StatusDisplayText(item.Status));
 
-                var row = dataGridViewSourceItems.Rows[rowIndex];
-                row.Tag = item;
-                if (item.Archived)
-                    row.DefaultCellStyle.ForeColor = System.Drawing.Color.Gray;
+                    var row = dataGridViewSourceItems.Rows[rowIndex];
+                    row.Tag = item;
+                    if (item.Archived)
+                        row.DefaultCellStyle.ForeColor = System.Drawing.Color.Gray;
+                }
+                dataGridViewSourceItems.ResumeLayout();
+
+                SelectRowById(_selectedId);
             }
-            dataGridViewSourceItems.ResumeLayout();
+            finally
+            {
+                _repopulatingGrid = false;
+            }
 
-            SelectRowById(_selectedId);
             UpdateDetailPanel();
             UpdateUseEnabled();
         }
@@ -376,6 +393,11 @@ namespace GladosSwAddin.Forms
 
         private void dataGridViewSourceItems_SelectionChanged(object sender, EventArgs e)
         {
+            // RepopulateGrid reselects _selectedId and refreshes the detail panel and Use
+            // itself once the rows are back.
+            if (_repopulatingGrid)
+                return;
+
             _selectedId = CurrentSelectedItem()?.Id;
             UpdateDetailPanel();
             UpdateUseEnabled();

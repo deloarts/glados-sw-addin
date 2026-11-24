@@ -132,7 +132,7 @@
             this.comboBoxFilterType.Location = new System.Drawing.Point(227, 42);
             this.comboBoxFilterType.Name = "comboBoxFilterType";
             this.comboBoxFilterType.Size = new System.Drawing.Size(112, 21);
-            this.comboBoxFilterType.TabIndex = 3;
+            this.comboBoxFilterType.TabIndex = 2;
             this.comboBoxFilterType.SelectedIndexChanged += new System.EventHandler(this.Filter_Changed);
             // 
             // labelFilterMaterial
@@ -149,7 +149,7 @@
             this.textBoxFilterMaterial.Location = new System.Drawing.Point(345, 42);
             this.textBoxFilterMaterial.Name = "textBoxFilterMaterial";
             this.textBoxFilterMaterial.Size = new System.Drawing.Size(110, 20);
-            this.textBoxFilterMaterial.TabIndex = 5;
+            this.textBoxFilterMaterial.TabIndex = 3;
             this.textBoxFilterMaterial.TextChanged += new System.EventHandler(this.Filter_Changed);
             // 
             // labelFilterDimension
@@ -166,7 +166,7 @@
             this.textBoxFilterDimension.Location = new System.Drawing.Point(463, 42);
             this.textBoxFilterDimension.Name = "textBoxFilterDimension";
             this.textBoxFilterDimension.Size = new System.Drawing.Size(110, 20);
-            this.textBoxFilterDimension.TabIndex = 7;
+            this.textBoxFilterDimension.TabIndex = 4;
             this.textBoxFilterDimension.TextChanged += new System.EventHandler(this.Filter_Changed);
             // 
             // labelFilterManufacturer
@@ -183,9 +183,10 @@
             this.comboBoxFilterManufacturer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxFilterManufacturer.FormattingEnabled = true;
             this.comboBoxFilterManufacturer.Location = new System.Drawing.Point(581, 42);
+            this.comboBoxFilterManufacturer.MaxDropDownItems = 5;
             this.comboBoxFilterManufacturer.Name = "comboBoxFilterManufacturer";
             this.comboBoxFilterManufacturer.Size = new System.Drawing.Size(170, 21);
-            this.comboBoxFilterManufacturer.TabIndex = 9;
+            this.comboBoxFilterManufacturer.TabIndex = 5;
             this.comboBoxFilterManufacturer.SelectedIndexChanged += new System.EventHandler(this.Filter_Changed);
             // 
             // checkBoxShowArchived
@@ -194,7 +195,7 @@
             this.checkBoxShowArchived.Location = new System.Drawing.Point(13, 65);
             this.checkBoxShowArchived.Name = "checkBoxShowArchived";
             this.checkBoxShowArchived.Size = new System.Drawing.Size(97, 17);
-            this.checkBoxShowArchived.TabIndex = 10;
+            this.checkBoxShowArchived.TabIndex = 6;
             this.checkBoxShowArchived.Text = "Show archived";
             this.checkBoxShowArchived.UseVisualStyleBackColor = true;
             this.checkBoxShowArchived.CheckedChanged += new System.EventHandler(this.Filter_Changed);
@@ -204,7 +205,7 @@
             this.buttonRefresh.Location = new System.Drawing.Point(757, 41);
             this.buttonRefresh.Name = "buttonRefresh";
             this.buttonRefresh.Size = new System.Drawing.Size(76, 23);
-            this.buttonRefresh.TabIndex = 11;
+            this.buttonRefresh.TabIndex = 7;
             this.buttonRefresh.Text = "Refresh";
             this.buttonRefresh.UseVisualStyleBackColor = true;
             this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
@@ -375,7 +376,7 @@
             this.buttonCreateSubmit.Location = new System.Drawing.Point(13, 174);
             this.buttonCreateSubmit.Name = "buttonCreateSubmit";
             this.buttonCreateSubmit.Size = new System.Drawing.Size(106, 23);
-            this.buttonCreateSubmit.TabIndex = 17;
+            this.buttonCreateSubmit.TabIndex = 22;
             this.buttonCreateSubmit.Text = "Create";
             this.buttonCreateSubmit.UseVisualStyleBackColor = true;
             this.buttonCreateSubmit.Click += new System.EventHandler(this.buttonCreateSubmit_Click);
@@ -386,7 +387,7 @@
             this.textBoxCreateNote.Multiline = true;
             this.textBoxCreateNote.Name = "textBoxCreateNote";
             this.textBoxCreateNote.Size = new System.Drawing.Size(259, 150);
-            this.textBoxCreateNote.TabIndex = 15;
+            this.textBoxCreateNote.TabIndex = 21;
             // 
             // labelCreateNote
             // 
@@ -402,7 +403,7 @@
             this.textBoxCreateOrderCode2.Location = new System.Drawing.Point(210, 139);
             this.textBoxCreateOrderCode2.Name = "textBoxCreateOrderCode2";
             this.textBoxCreateOrderCode2.Size = new System.Drawing.Size(160, 20);
-            this.textBoxCreateOrderCode2.TabIndex = 13;
+            this.textBoxCreateOrderCode2.TabIndex = 19;
             // 
             // labelCreateOrderCode2
             // 
@@ -418,7 +419,7 @@
             this.textBoxCreateOrderCode1.Location = new System.Drawing.Point(13, 139);
             this.textBoxCreateOrderCode1.Name = "textBoxCreateOrderCode1";
             this.textBoxCreateOrderCode1.Size = new System.Drawing.Size(191, 20);
-            this.textBoxCreateOrderCode1.TabIndex = 11;
+            this.textBoxCreateOrderCode1.TabIndex = 18;
             // 
             // labelCreateOrderCode1
             // 
@@ -436,7 +437,7 @@
             this.comboBoxCreateManufacturer.Location = new System.Drawing.Point(376, 138);
             this.comboBoxCreateManufacturer.Name = "comboBoxCreateManufacturer";
             this.comboBoxCreateManufacturer.Size = new System.Drawing.Size(160, 21);
-            this.comboBoxCreateManufacturer.TabIndex = 9;
+            this.comboBoxCreateManufacturer.TabIndex = 20;
             // 
             // labelCreateManufacturer
             // 
@@ -452,7 +453,7 @@
             this.textBoxCreateMass.Location = new System.Drawing.Point(456, 94);
             this.textBoxCreateMass.Name = "textBoxCreateMass";
             this.textBoxCreateMass.Size = new System.Drawing.Size(80, 20);
-            this.textBoxCreateMass.TabIndex = 7;
+            this.textBoxCreateMass.TabIndex = 17;
             // 
             // labelCreateMass
             // 
@@ -468,7 +469,7 @@
             this.textBoxCreateMaterial.Location = new System.Drawing.Point(310, 94);
             this.textBoxCreateMaterial.Name = "textBoxCreateMaterial";
             this.textBoxCreateMaterial.Size = new System.Drawing.Size(140, 20);
-            this.textBoxCreateMaterial.TabIndex = 5;
+            this.textBoxCreateMaterial.TabIndex = 16;
             // 
             // labelCreateMaterial
             // 
@@ -484,7 +485,7 @@
             this.textBoxCreateDimensionWidth.Location = new System.Drawing.Point(142, 46);
             this.textBoxCreateDimensionWidth.Name = "textBoxCreateDimensionWidth";
             this.textBoxCreateDimensionWidth.Size = new System.Drawing.Size(80, 20);
-            this.textBoxCreateDimensionWidth.TabIndex = 3;
+            this.textBoxCreateDimensionWidth.TabIndex = 11;
             // 
             // labelCreateDimension
             // 
@@ -502,7 +503,7 @@
             this.comboBoxCreateType.Location = new System.Drawing.Point(13, 93);
             this.comboBoxCreateType.Name = "comboBoxCreateType";
             this.comboBoxCreateType.Size = new System.Drawing.Size(288, 21);
-            this.comboBoxCreateType.TabIndex = 1;
+            this.comboBoxCreateType.TabIndex = 15;
             // 
             // labelCreateType
             // 
@@ -519,7 +520,7 @@
             this.buttonUse.Location = new System.Drawing.Point(686, 632);
             this.buttonUse.Name = "buttonUse";
             this.buttonUse.Size = new System.Drawing.Size(80, 23);
-            this.buttonUse.TabIndex = 16;
+            this.buttonUse.TabIndex = 30;
             this.buttonUse.Text = "Use";
             this.buttonUse.UseVisualStyleBackColor = true;
             this.buttonUse.Click += new System.EventHandler(this.buttonUse_Click);
@@ -531,7 +532,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(772, 632);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(80, 23);
-            this.buttonCancel.TabIndex = 17;
+            this.buttonCancel.TabIndex = 31;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -687,21 +688,21 @@
             this.textBoxCreateDimensionWallThickness.Location = new System.Drawing.Point(456, 47);
             this.textBoxCreateDimensionWallThickness.Name = "textBoxCreateDimensionWallThickness";
             this.textBoxCreateDimensionWallThickness.Size = new System.Drawing.Size(80, 20);
-            this.textBoxCreateDimensionWallThickness.TabIndex = 7;
+            this.textBoxCreateDimensionWallThickness.TabIndex = 14;
             // 
             // textBoxCreateDimensionLength
             // 
             this.textBoxCreateDimensionLength.Location = new System.Drawing.Point(352, 47);
             this.textBoxCreateDimensionLength.Name = "textBoxCreateDimensionLength";
             this.textBoxCreateDimensionLength.Size = new System.Drawing.Size(80, 20);
-            this.textBoxCreateDimensionLength.TabIndex = 6;
+            this.textBoxCreateDimensionLength.TabIndex = 13;
             // 
             // textBoxCreateDimensionHeight
             // 
             this.textBoxCreateDimensionHeight.Location = new System.Drawing.Point(247, 46);
             this.textBoxCreateDimensionHeight.Name = "textBoxCreateDimensionHeight";
             this.textBoxCreateDimensionHeight.Size = new System.Drawing.Size(80, 20);
-            this.textBoxCreateDimensionHeight.TabIndex = 5;
+            this.textBoxCreateDimensionHeight.TabIndex = 12;
             // 
             // comboBoxCreatePreset
             // 
@@ -710,7 +711,7 @@
             this.comboBoxCreatePreset.Location = new System.Drawing.Point(13, 46);
             this.comboBoxCreatePreset.Name = "comboBoxCreatePreset";
             this.comboBoxCreatePreset.Size = new System.Drawing.Size(94, 21);
-            this.comboBoxCreatePreset.TabIndex = 4;
+            this.comboBoxCreatePreset.TabIndex = 10;
             // 
             // labelBaseSize
             // 
